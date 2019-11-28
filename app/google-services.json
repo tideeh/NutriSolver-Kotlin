@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "30158794452",
+    "firebase_url": "https://nutrisolver-da108.firebaseio.com",
+    "project_id": "nutrisolver-da108",
+    "storage_bucket": "nutrisolver-da108.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:30158794452:android:a5591f9808b789e8b01541",
+        "android_client_info": {
+          "package_name": "br.com.nutrisolver"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "30158794452-pn18s656dipfgm4v259pdcqndive3dqs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD81wTqwaLXwElAI_EMBBOXzsjao0pcLF8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "30158794452-pn18s656dipfgm4v259pdcqndive3dqs.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

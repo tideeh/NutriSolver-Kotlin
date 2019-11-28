@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <!-- barra de tarefas -->
+        <include
+            android:id="@+id/my_toolbar_main"
+            layout="@layout/barra_tarefas" />
+
+        <TextView
+            style="@style/texto_cabecalho"
+            android:text="@string/selecione_os_ingredientes_da_dieta" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <ListView
+                android:id="@+id/listView_editar_ingredientes"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="9">
+            </ListView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="bottom|center_horizontal"
+                android:orientation="horizontal"
+                android:paddingTop="20dp"
+                android:paddingBottom="20dp">
+
+                <Button
+                    style="@style/botao_confirmar"
+                    android:layout_marginBottom="0dp"
+                    android:onClick="salvar_dieta"
+                    android:text="@string/salvar_dieta" />
+
+                <Button
+                    style="@style/botao_cancelar"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginBottom="0dp"
+                    android:onClick="cancelar"
+                    android:text="@string/cancelar" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <ProgressBar
+        style="@style/my_progress_bar"
+        android:id="@+id/progress_bar"
+        android:visibility="gone"/>
+
+
+</FrameLayout>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activitys.LotesFragment">
+
+    <ListView
+        android:id="@+id/lista_lotes"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_cadastrar_lote"
+        style="@style/floating_button_add" />
+
+    <ProgressBar
+        style="@style/my_progress_bar"
+        android:id="@+id/progress_bar"
+        android:visibility="gone"/>
+
+</FrameLayout>

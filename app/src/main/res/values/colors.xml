@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#7c2f2b</color>
+    <color name="colorPrimaryDark">#4b0000</color>
+    <color name="colorPrimaryLight">#C45A53</color>
+
+    <color name="colorAccent">#cbaf31</color>
+    <color name="colorAccentDark">#978000</color>
+    <color name="colorAccentLight">#ffe163</color>
+
+    <color name="textOnPrimary">#ffffff</color>
+    <color name="textOnSecundary">#000000</color>
+
+    <color name="tabLayout_selected_text_color">#ffffff</color>
+    <color name="tabLayout_selected_icon_color">#ffffff</color>
+    <color name="tabLayout_unselected_text_color">#a8a8a8</color>
+    <color name="tabLayout_unselected_icon_color">#a8a8a8</color>
+</resources>

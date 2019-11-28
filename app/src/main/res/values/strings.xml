@@ -1,0 +1,48 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name">NutriSolver</string>
+    <string name="logo_name">NUTRISOLVER</string>
+    <string name="facebook_app_id">1327187937462145</string>
+    <string name="fb_login_protocol_scheme">fb1327187937462145</string>
+    <string name="ou">ou</string>
+    <string name="email">email</string>
+    <string name="senha">senha</string>
+    <string name="login">Login</string>
+    <string name="registrar">Registrar</string>
+    <string name="recuperar_senha">Recuperar Senha</string>
+    <string name="repita_a_senha">repita a senha</string>
+    <string name="Registrar">Registrar</string>
+    <string name="cadastrar_fazenda">Cadastrar Fazenda</string>
+    <string name="nome_da_fazenda">Nome da Fazenda</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="drawer_open">Abrir gaveta</string>
+    <string name="drawer_close">Fechar gaveta</string>
+    <string name="cadastrar_lote">Cadastrar Lote</string>
+    <string name="nome_do_lote">Nome do Lote</string>
+    <string name="fazer_login_com_google">Fazer login com Google</string>
+    <string name="fazer_login_com_facebook">Fazer login com Facebook</string>
+    <string name="sair">Sair</string>
+    <string name="lotes">Lotes</string>
+    <string name="pesquisar">Pesquisar</string>
+    <string name="atualizar">Atualizar</string>
+    <string name="minha_conta">Minha Conta</string>
+    <string name="imagem_logo">imagem logo</string>
+    <string name="ola_selecione_uma_fazenda">Olá, selecione uma Fazenda!</string>
+    <string name="ola_faca_o_cadastro_da_sua_fazenda">Olá, faça o cadastro da sua fazenda!</string>
+    <string name="editar_dieta">Editar Dieta</string>
+    <string name="executar_teste">Executar Teste</string>
+    <string name="dieta_atual">Dieta Atual</string>
+    <string name="selecione_os_ingredientes_da_dieta">Selecione os ingredientes da Dieta</string>
+    <string name="cancelar">Cancelar</string>
+    <string name="salvar_dieta">Salvar Dieta</string>
+
+    <string name="com.crashlytics.useFirebaseAppId" tools:ignore="ExtraTranslation">true</string>
+    <string name="selecione_o_dispositivo_para_conexao_bluetooth">Selecione o dispositivo para conexão Bluetooth</string>
+    <string name="tab1_title">Lotes</string>
+    <string name="tab2_title">Dietas</string>
+    <string name="tab3_title">Testes</string>
+    <string name="nome_da_dieta">Nome da Dieta</string>
+    <string name="dietas">Dietas</string>
+    <string name="cadastrar_dieta">Cadastrar Dieta</string>
+</resources>

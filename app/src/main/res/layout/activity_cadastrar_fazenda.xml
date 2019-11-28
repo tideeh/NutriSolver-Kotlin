@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <!-- barra de tarefas -->
+        <include
+            android:id="@+id/my_toolbar_main"
+            layout="@layout/barra_tarefas" />
+
+        <TextView
+            style="@style/texto_cabecalho"
+            android:text="@string/ola_faca_o_cadastro_da_sua_fazenda" />
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginEnd="10dp"
+                    android:hint="@string/nome_da_fazenda">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/cadastrar_nome_da_fazenda"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textEmailAddress" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="bottom"
+                    android:orientation="vertical">
+
+                    <Button
+                        style="@style/botao_confirmar"
+                        android:layout_gravity="center_horizontal"
+                        android:onClick="cadastrar_fazenda"
+                        android:text="@string/cadastrar_fazenda" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+    </LinearLayout>
+
+    <ProgressBar
+        style="@style/my_progress_bar"
+        android:id="@+id/progress_bar"
+        android:visibility="gone"/>
+
+</FrameLayout>

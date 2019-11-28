@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!-- barra de tarefas -->
+    <include
+        android:id="@+id/my_toolbar_main"
+        layout="@layout/barra_tarefas" />
+
+    <TextView
+        style="@style/texto_cabecalho"
+        android:text="@string/selecione_o_dispositivo_para_conexao_bluetooth" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/title_paired_devices"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#666"
+                android:gravity="center_horizontal"
+                android:text="Dispositivos pareados"
+                android:textColor="#fff" />
+
+            <ListView
+                android:id="@+id/listView_bt_devices_paireds"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/title_new_devices"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#666"
+                android:gravity="center_horizontal"
+                android:text="Outros dispositivos"
+                android:textColor="#fff" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ListView
+                    android:id="@+id/listView_bt_new_devices"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <ProgressBar
+                    android:id="@+id/progress_bar"
+                    style="@style/my_progress_bar"
+                    android:visibility="gone" />
+            </FrameLayout>
+
+        </LinearLayout>
+
+        <Button
+            android:visibility="gone"
+            android:id="@+id/button_scan"
+            style="@style/botao_confirmar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="Procurar dispositivos" />
+
+        <TextView
+            android:id="@+id/infoText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/darker_gray"
+            android:gravity="center_horizontal"
+            android:text="Se o dispositivo não se encontra na lista, parear seu dispositivo nas configurações de Bluetooth"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:visibility="visible" />
+
+
+    </LinearLayout>
+
+
+</LinearLayout>

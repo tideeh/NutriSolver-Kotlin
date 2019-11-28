@@ -1,0 +1,34 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/mi_search"
+        android:icon="@drawable/outline_search_black_48dp"
+        android:title="@string/pesquisar"
+        app:showAsAction="collapseActionView|always"
+        app:actionViewClass="androidx.appcompat.widget.SearchView">
+    </item>
+
+    <item
+        android:visible="false"
+        android:id="@+id/mi_refresh"
+        android:icon="@drawable/outline_refresh_black_48dp"
+        android:title="@string/atualizar"
+        app:showAsAction="always">
+    </item>
+
+    <item
+        android:id="@+id/miMinhaConta"
+        android:icon="@drawable/outline_account_circle_black_48dp"
+        android:title="@string/minha_conta"
+        app:showAsAction="ifRoom">
+    </item>
+
+    <item
+        android:id="@+id/miDeslogar"
+        android:icon="@android:drawable/ic_menu_info_details"
+        android:title="@string/sair"
+        app:showAsAction="never">
+
+    </item>
+</menu>

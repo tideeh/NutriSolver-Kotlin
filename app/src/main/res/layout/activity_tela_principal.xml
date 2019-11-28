@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <!-- barra de tarefas -->
+            <include
+                android:id="@+id/my_toolbar_main"
+                layout="@layout/barra_tarefas" />
+
+            <TextView
+                style="@style/texto_cabecalho"
+                android:text="@string/lotes" />
+
+            <ListView
+                android:id="@+id/lista_lotes"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+            </ListView>
+
+        </LinearLayout>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_cadastrar_lote"
+            style="@style/floating_button_add"
+            android:onClick="cadastrar_lote" />
+
+        <ProgressBar
+            style="@style/my_progress_bar"
+            android:id="@+id/progress_bar"
+            android:visibility="gone"/>
+    </FrameLayout>
+
+    <!-- barra lateral de navegacao -->
+    <fragment
+        android:id="@+id/fragment_navigation_drawer"
+        android:name="br.com.nutrisolver.tools.SideBar"
+        android:layout_width="280dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        app:layout="@layout/fragment_side_bar"
+        tools:layout="@layout/fragment_side_bar" />
+
+</androidx.drawerlayout.widget.DrawerLayout>

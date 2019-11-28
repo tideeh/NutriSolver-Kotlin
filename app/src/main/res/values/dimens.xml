@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="logo_margin_top">20dp</dimen>
+    <dimen name="borda_botao_espessura">1dip</dimen>
+    <dimen name="angulo_canto_botao">10dip</dimen>
+</resources>
