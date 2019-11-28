@@ -22,8 +22,7 @@ class SplashScreen : AppCompatActivity() {
         getSharedPreferences("MyPref", Context.MODE_PRIVATE)
     }
 
-    private var fazendaCorrenteId : String = ""
-    private var fazenda : Fazenda? = null
+    private var fazenda_corrente_id : String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,23 +48,30 @@ class SplashScreen : AppCompatActivity() {
             finish()
         }
         else{
-            fazendaCorrenteId = sharedpreferences.getString("fazenda_corrente_id", "-1") ?: "-1"
+            fazenda_corrente_id = sharedpreferences.getString("fazenda_corrente_id", "-1") ?: "-1"
 
-            DataBaseUtil.getDocument("fazendas", fazendaCorrenteId)
+            DataBaseUtil.getDocument("fazendas", fazenda_corrente_id)
                 .addOnCompleteListener { task ->
                     if(task.isSuccessful){
-                        val fazenda = task.result?.toObject(Fazenda::class.java)
-                        if(fazenda != null){
-                            if(fazenda.dono_uid == UserUtil.getCurrentUser()?.uid){
-                                val editor = sharedpreferences.edit()
-                                editor.putString("fazenda_corrente_id", fazenda.id)
-                                editor.putString("fazenda_corrente_nome", fazenda.nome)
-                                editor.apply()
+                        val document = task.result
+                        if(document != null){
+                            val fazenda = document.toObject(Fazenda::class.java)
+                            if(fazenda != null) {
+                                if (fazenda.dono_uid == UserUtil.getCurrentUser()?.uid) {
+                                    val editor = sharedpreferences.edit()
+                                    editor.putString("fazenda_corrente_id", fazenda.id)
+                                    editor.putString("fazenda_corrente_nome", fazenda.nome)
+                                    editor.apply()
 
-                                startActivity(Intent(applicationContext, ))
+                                    startActivity(Intent(applicationContext, Principal::class.java))
+                                    finish()
+                                    return@addOnCompleteListener
+                                }
                             }
                         }
                     }
+                    startActivity(Intent(applicationContext, SelecionarFazenda::class.java))
+                    finish()
                 }
         }
     }

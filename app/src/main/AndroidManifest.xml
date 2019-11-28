@@ -17,9 +17,26 @@
         android:testOnly="false"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".activitys.CadastrarFazenda"
+            android:windowSoftInputMode="adjustResize"></activity>
+        <activity android:name=".activitys.ExecutarTeste1" />
+        <activity android:name=".activitys.CadastrarDieta" />
+        <activity
+            android:name=".activitys.CadastrarLote"
+            android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".activitys.VisualizaLote" />
+        <activity
+            android:name=".activitys.Register"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".activitys.SelecionarFazenda"
+            android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".activitys.Principal" />
+        <activity
             android:name=".activitys.Login"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize"></activity>
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".activitys.SplashScreen"
             android:screenOrientation="portrait"
@@ -30,24 +47,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activitys.CadastrarDieta" />
-        <activity android:name=".activitys.MainActivity" />
         <activity android:name=".activitys.ListaDispositivosBT" />
-        <activity android:name=".activitys.ExecutarTeste1" />
-        <activity android:name=".activitys.VisualizaLote" />
-        <activity
-            android:name=".activitys.CadastrarLote"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name=".activitys.CadastrarFazenda"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name=".activitys.Register"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name=".activitys.SelecionarFazenda"
-            android:windowSoftInputMode="adjustResize" />
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"

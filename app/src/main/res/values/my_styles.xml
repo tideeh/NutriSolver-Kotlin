@@ -37,7 +37,7 @@
         <item name="android:padding">8dp</item>
     </style>
 
-    <style name="floating_button_add">
+    <style name="floating_button_add" parent="@style/Widget.MaterialComponents.FloatingActionButton">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_gravity">bottom|end</item>
