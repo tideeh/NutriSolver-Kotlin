@@ -34,9 +34,7 @@ class Principal : AppCompatActivity() {
     internal lateinit var lotesFragment: LotesFragment
     internal lateinit var dietasFragment: DietasFragment
     internal lateinit var testesFragment: TestesFragment
-    internal lateinit var dataFromActivityToLotesFragment: DataFromActivityToFragment
-    internal lateinit var dataFromActivityToDietasFragment: DataFromActivityToFragment
-    internal lateinit var dataFromActivityToTestesFragment: DataFromActivityToFragment
+
     private var first_select_ignored: Boolean = false
 
     private val tabIcons =
@@ -331,22 +329,29 @@ class Principal : AppCompatActivity() {
         startActivity(Intent(this, ExecutarTeste1::class.java))
     }
 
-    fun sendData(fragment: String, data: String, `object`: Any) {
-        when (fragment) {
-            "DietasFragment" -> {
-                dataFromActivityToDietasFragment.sendData(data, `object`)
-            }
+    companion object{
+        lateinit var dataFromActivityToLotesFragment: DataFromActivityToFragment
+        lateinit var dataFromActivityToDietasFragment: DataFromActivityToFragment
+        lateinit var dataFromActivityToTestesFragment: DataFromActivityToFragment
 
-            "LotesFragment" -> {
-                dataFromActivityToLotesFragment.sendData(data, `object`)
-            }
+        fun sendData(fragment: String, data: String, `object`: Any) {
+            when (fragment) {
+                "DietasFragment" -> {
+                    dataFromActivityToDietasFragment.sendData(data, `object`)
+                }
 
-            "TestesFragment" -> {
-                dataFromActivityToTestesFragment.sendData(data, `object`)
-            }
+                "LotesFragment" -> {
+                    dataFromActivityToLotesFragment.sendData(data, `object`)
+                }
 
-            else -> {
+                "TestesFragment" -> {
+                    dataFromActivityToTestesFragment.sendData(data, `object`)
+                }
+
+                else -> {
+                }
             }
         }
     }
+
 }

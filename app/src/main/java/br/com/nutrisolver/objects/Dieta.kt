@@ -16,7 +16,7 @@ class Dieta() : Parcelable {
     var lote_id: String = "-1"
     var nome: String = ""
     var isAtivo : Boolean = true
-    var ingredientes_nomes: ArrayList<String> = ArrayList() // tambem serve como DocumentReference pois o id do ingrediente eh o seu nome
+    var ingredientes_nomes: ArrayList<String>? = ArrayList() // tambem serve como DocumentReference pois o id do ingrediente eh o seu nome
 
     constructor(parcel: Parcel) : this() {
         id = parcel.readString() ?: "-1"
@@ -26,6 +26,7 @@ class Dieta() : Parcelable {
         lote_id = parcel.readString() ?: "-1"
         nome = parcel.readString() ?: ""
         isAtivo = parcel.readByte() != 0.toByte()
+        ingredientes_nomes = parcel.createStringArrayList()
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -36,6 +37,7 @@ class Dieta() : Parcelable {
         parcel.writeString(lote_id)
         parcel.writeString(nome)
         parcel.writeByte(if (isAtivo) 1 else 0)
+        parcel.writeStringList(ingredientes_nomes)
     }
 
     override fun describeContents(): Int {

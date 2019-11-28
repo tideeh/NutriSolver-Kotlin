@@ -1,13 +1,20 @@
 package br.com.nutrisolver.tools
 
 import com.google.android.gms.tasks.Task
-import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
 
 object DataBaseUtil {
     private val db : FirebaseFirestore = FirebaseFirestore.getInstance()
+
+    fun insertDocument(
+        collection: String,
+        documentID: String,
+        `object`: Any
+    ): Task<*>? {
+        return db.collection(collection).document(documentID).set(`object`)
+    }
 
     fun getDocument(collection: String, documentID: String) = db.collection(collection).document(documentID).get()
 

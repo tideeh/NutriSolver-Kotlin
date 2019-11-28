@@ -25,9 +25,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.firestore.QuerySnapshot
 import java.util.ArrayList
 
-/**
- * A simple [Fragment] subclass.
- */
 class DietasFragment : Fragment(), Principal.DataFromActivityToFragment {
     lateinit var my_view: View
     private lateinit var listView_dietas: ListView
@@ -108,7 +105,7 @@ class DietasFragment : Fragment(), Principal.DataFromActivityToFragment {
                         }
                         progressBar.visibility = View.GONE
                     } else {
-                        Log.i("MY_FIRESTORE", "Error getting documents: " + task.exception!!)
+                        Log.i("MY_FIRESTORE", "Error getting documents: " + task.exception)
                         progressBar.visibility = View.GONE
                     }
                 }
