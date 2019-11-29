@@ -19,8 +19,6 @@ import br.com.nutrisolver.tools.DataBaseUtil
 import br.com.nutrisolver.tools.ToastUtil.show
 import br.com.nutrisolver.tools.UserUtil.getCurrentUser
 import br.com.nutrisolver.tools.UserUtil.isLogged
-import java.text.SimpleDateFormat
-import java.util.*
 
 class CadastrarFazenda : AppCompatActivity() {
     //private FirebaseFirestore db;
@@ -50,6 +48,7 @@ class CadastrarFazenda : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
+
         if (!isLogged()) {
             startActivity(Intent(this, Login::class.java))
             finish()

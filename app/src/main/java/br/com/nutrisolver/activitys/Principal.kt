@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.PorterDuff
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -14,6 +13,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
@@ -23,12 +23,7 @@ import br.com.nutrisolver.objects.Fazenda
 import br.com.nutrisolver.tools.DataBaseUtil
 import br.com.nutrisolver.tools.TabsAdapter
 import br.com.nutrisolver.tools.UserUtil
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.gms.tasks.Task
 import com.google.android.material.tabs.TabLayout
-import com.google.firebase.firestore.QuerySnapshot
-import java.util.*
-import kotlin.collections.ArrayList
 
 class Principal : AppCompatActivity() {
     internal lateinit var lotesFragment: LotesFragment
@@ -42,9 +37,8 @@ class Principal : AppCompatActivity() {
 
     private val tabTexts = arrayOf("LOTES", "DIETAS", "TESTES")
 
-    private val sharedpreferences: SharedPreferences by lazy {
-        getSharedPreferences("MyPref", Context.MODE_PRIVATE)
-    }
+    private lateinit var sharedpreferences: SharedPreferences
+
     private var fazenda_corrente_id: String = "-1"
     private var fazenda_corrente_nome: String = "-1"
     private lateinit var tabsAdapter: TabsAdapter
@@ -59,7 +53,9 @@ class Principal : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_nova_main)
+        setContentView(R.layout.activity_principal)
+
+        sharedpreferences = getSharedPreferences("MyPref", Context.MODE_PRIVATE)
 
         first_select_ignored = false
 
@@ -109,6 +105,11 @@ class Principal : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
+
+        if (!UserUtil.isLogged()) {
+            startActivity(Intent(this, Login::class.java))
+            finish()
+        }
 
         // fecha o navigation drawer
         mDrawerLayout = findViewById(R.id.drawer_layout)
@@ -253,7 +254,7 @@ class Principal : AppCompatActivity() {
                                             null
                                         )
 
-                                        supportActionBar?.setTitle("Fazenda: " + fazenda_corrente_nome)
+                                        supportActionBar?.title = "Fazenda: " + fazenda_corrente_nome
                                     }
                                     first_select_ignored = true
                                 }
@@ -329,7 +330,7 @@ class Principal : AppCompatActivity() {
         startActivity(Intent(this, ExecutarTeste1::class.java))
     }
 
-    companion object{
+    companion object {
         lateinit var dataFromActivityToLotesFragment: DataFromActivityToFragment
         lateinit var dataFromActivityToDietasFragment: DataFromActivityToFragment
         lateinit var dataFromActivityToTestesFragment: DataFromActivityToFragment

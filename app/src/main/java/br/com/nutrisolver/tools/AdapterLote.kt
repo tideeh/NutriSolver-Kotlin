@@ -7,9 +7,9 @@ import android.widget.BaseAdapter
 import android.widget.TextView
 import br.com.nutrisolver.R
 import br.com.nutrisolver.objects.Lote
-import java.util.ArrayList
+import java.util.*
 
-class AdapterLote(private val act : Activity?) : BaseAdapter() {
+class AdapterLote(private val act: Activity?) : BaseAdapter() {
     val list_items: ArrayList<Lote> = ArrayList()
 
     override fun getCount(): Int {
@@ -33,7 +33,7 @@ class AdapterLote(private val act : Activity?) : BaseAdapter() {
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View? {
-        if(act == null){
+        if (act == null) {
             return null
         }
 

@@ -7,19 +7,20 @@ import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import br.com.nutrisolver.activitys.SelecionarFazenda
+import br.com.nutrisolver.tools.ToastUtil.show
 import com.facebook.AccessToken
 import com.facebook.login.LoginManager
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.gms.tasks.Task
-import com.google.firebase.auth.*
+import com.google.firebase.auth.FacebookAuthProvider
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
 
 object UserUtil {
     private var mAuth: FirebaseAuth = FirebaseAuth.getInstance()
 
-    public fun getCurrentUser() = mAuth.currentUser
+    fun getCurrentUser() = mAuth.currentUser
 
-    public fun isLogged(): Boolean {
+    fun isLogged(): Boolean {
         return mAuth.currentUser != null
     }
 
@@ -95,6 +96,32 @@ object UserUtil {
                     ToastUtil.show(
                         ctx,
                         "Autenticação falhou: " + task.exception!!,
+                        Toast.LENGTH_SHORT
+                    )
+                }
+                progressBar.visibility = View.GONE
+            }
+    }
+
+    fun createUserWithEmailAndPassword(
+        ctx: AppCompatActivity,
+        email: String,
+        senha: String,
+        progressBar: ProgressBar
+    ) {
+
+        progressBar.visibility = View.VISIBLE
+        mAuth.createUserWithEmailAndPassword(email, senha)
+            .addOnCompleteListener(
+                ctx
+            ) { task ->
+                if (task.isSuccessful) { // registrado com sucesso, vai para a tela selecionar fazenda
+                    ctx.startActivity(Intent(ctx, SelecionarFazenda::class.java))
+                    ctx.finish()
+                } else { // registro falhou
+                    show(
+                        ctx,
+                        "Registro falhou: " + task.exception,
                         Toast.LENGTH_SHORT
                     )
                 }

@@ -1,7 +1,7 @@
 package br.com.nutrisolver.objects
 
-class Ingrediente() {
+class Ingrediente {
 
-    var nome : String = ""
-    var ativo : Boolean = true
+    var nome: String = ""
+    var ativo: Boolean = true
 }

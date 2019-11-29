@@ -7,10 +7,10 @@ import android.os.Bundle
 import android.os.Handler
 import android.text.TextUtils
 import android.util.Log
+import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
-import android.widget.AdapterView.OnItemClickListener
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import br.com.nutrisolver.R
@@ -20,11 +20,10 @@ import br.com.nutrisolver.objects.Lote
 import br.com.nutrisolver.tools.AdapterIngredienteNome
 import br.com.nutrisolver.tools.DataBaseUtil
 import br.com.nutrisolver.tools.ToastUtil.show
+import br.com.nutrisolver.tools.UserUtil
 import br.com.nutrisolver.tools.UserUtil.getCurrentUser
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.firestore.QuerySnapshot
-import java.util.*
-import kotlin.collections.ArrayList
 
 class CadastrarDieta : AppCompatActivity() {
     private val TIMEOUT_DB = 30 * 60 * 1000.toLong() // ms (MIN * 60 * 100)
@@ -41,7 +40,7 @@ class CadastrarDieta : AppCompatActivity() {
     private var lotes_nomes: ArrayList<String> = ArrayList()
     private var lotes_ids: ArrayList<String> = ArrayList()
     private lateinit var spinner: Spinner
-    private lateinit var lote_selecionado_id : String
+    private lateinit var lote_selecionado_id: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -96,14 +95,19 @@ class CadastrarDieta : AppCompatActivity() {
                                 ingredientes_nomes.add(document.toObject<Ingrediente>(Ingrediente::class.java).nome)
                             }
                             // salva no sharedpreferences por um tempo para evitar muitos acessos no DB
-                            val possiveis_ingredientes_string = TextUtils.join(";;;", ingredientes_nomes)
+                            val possiveis_ingredientes_string =
+                                TextUtils.join(";;;", ingredientes_nomes)
                             val editor = sharedpreferences.edit()
                             editor.putString("ingredientes_nomes", possiveis_ingredientes_string)
-                            editor.putLong("ingredientes_nomes_last_update", System.currentTimeMillis())
+                            editor.putLong(
+                                "ingredientes_nomes_last_update",
+                                System.currentTimeMillis()
+                            )
                             editor.apply()
                         }
                     }
-                    val itemsAdapter = AdapterIngredienteNome(this@CadastrarDieta, ingredientes_nomes)
+                    val itemsAdapter =
+                        AdapterIngredienteNome(this@CadastrarDieta, ingredientes_nomes)
                     listView_editar_ingredientes.adapter = itemsAdapter
                     progressBar.visibility = View.GONE
                 }
@@ -117,10 +121,6 @@ class CadastrarDieta : AppCompatActivity() {
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = "Fazenda: $fazenda_corrente_nome"
-    }
-
-    override fun onStart() {
-        super.onStart()
     }
 
     fun salvar_dieta(view: View?) {
@@ -232,7 +232,7 @@ class CadastrarDieta : AppCompatActivity() {
                         )
 
                         spinner.adapter = spn_adapter
-                        if(!lote_selecionado_id.equals("-1")){
+                        if (!lote_selecionado_id.equals("-1")) {
                             spinner.setSelection(lotes_ids.indexOf(lote_selecionado_id))
                         }
                         //spinner.setSelection(fazendas_ids.indexOf(fazenda_corrente_id));
@@ -244,5 +244,24 @@ class CadastrarDieta : AppCompatActivity() {
                     )
                 }
             })
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        if (!UserUtil.isLogged()) {
+            startActivity(Intent(this, Login::class.java))
+            finish()
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                finish()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 }

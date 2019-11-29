@@ -3,7 +3,7 @@ package br.com.nutrisolver.tools
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
-import java.util.ArrayList
+import java.util.*
 
 class TabsAdapter(fm: FragmentManager, internal var numberOfTabs: Int) :
     FragmentPagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {

@@ -8,15 +8,17 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 class Dieta() : Parcelable {
-    var id : String = UUID.randomUUID().toString()
-    var data_criacao: String = SimpleDateFormat("dd/MM/yyyy HH.mm.ss").format(Timestamp(System.currentTimeMillis()))
+    var id: String = UUID.randomUUID().toString()
+    var data_criacao: String =
+        SimpleDateFormat("dd/MM/yyyy HH.mm.ss").format(Timestamp(System.currentTimeMillis()))
 
     var dono_uid: String = "-1"
     var fazenda_id: String = "-1"
     var lote_id: String = "-1"
     var nome: String = ""
-    var isAtivo : Boolean = true
-    var ingredientes_nomes: ArrayList<String>? = ArrayList() // tambem serve como DocumentReference pois o id do ingrediente eh o seu nome
+    var isAtivo: Boolean = true
+    var ingredientes_nomes: ArrayList<String>? =
+        ArrayList() // tambem serve como DocumentReference pois o id do ingrediente eh o seu nome
 
     constructor(parcel: Parcel) : this() {
         id = parcel.readString() ?: "-1"

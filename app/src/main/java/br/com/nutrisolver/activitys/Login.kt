@@ -1,10 +1,10 @@
 package br.com.nutrisolver.activitys
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
 import br.com.nutrisolver.R
 import br.com.nutrisolver.tools.ToastUtil
 import br.com.nutrisolver.tools.UserUtil
@@ -19,7 +19,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.ApiException
 
-class Login : AppCompatActivity(), View.OnClickListener  {
+class Login : AppCompatActivity(), View.OnClickListener {
     private val RC_SIGN_IN_GOOGLE = 9001
 
     private lateinit var progressBar: ProgressBar

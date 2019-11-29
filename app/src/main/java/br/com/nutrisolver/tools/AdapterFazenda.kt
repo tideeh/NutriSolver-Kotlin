@@ -8,9 +8,8 @@ import android.widget.BaseAdapter
 import android.widget.TextView
 import br.com.nutrisolver.R
 import br.com.nutrisolver.objects.Fazenda
-import java.util.ArrayList
 
-class AdapterFazenda(private val act : Activity) : BaseAdapter() {
+class AdapterFazenda(private val act: Activity) : BaseAdapter() {
     private val list_items: MutableList<Fazenda> = mutableListOf()
 
     override fun getCount(): Int {

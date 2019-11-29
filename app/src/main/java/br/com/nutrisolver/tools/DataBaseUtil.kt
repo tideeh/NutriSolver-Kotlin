@@ -6,7 +6,7 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
 
 object DataBaseUtil {
-    private val db : FirebaseFirestore = FirebaseFirestore.getInstance()
+    private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
 
     fun insertDocument(
         collection: String,
@@ -16,7 +16,8 @@ object DataBaseUtil {
         return db.collection(collection).document(documentID).set(`object`)
     }
 
-    fun getDocument(collection: String, documentID: String) = db.collection(collection).document(documentID).get()
+    fun getDocument(collection: String, documentID: String) =
+        db.collection(collection).document(documentID).get()
 
     fun getDocumentsWhereEqualTo(
         collection: String,

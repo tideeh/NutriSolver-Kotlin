@@ -19,7 +19,6 @@ import br.com.nutrisolver.tools.DataBaseUtil
 import br.com.nutrisolver.tools.ToastUtil.show
 import br.com.nutrisolver.tools.UserUtil.getCurrentUser
 import br.com.nutrisolver.tools.UserUtil.isLogged
-import java.util.*
 
 class CadastrarLote : AppCompatActivity() {
     private lateinit var sharedpreferences: SharedPreferences
@@ -53,6 +52,7 @@ class CadastrarLote : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
+
         if (!isLogged()) {
             startActivity(Intent(this, Login::class.java))
             finish()

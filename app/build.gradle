@@ -2,11 +2,12 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'io.fabric'
+apply plugin: 'com.google.firebase.firebase-perf'
 
 // aqui configura o version code e o version name
 ext.versionMajor = 1 // altera quando tem um grande releas
-ext.versionMinor = 0 // altera quando tem um release medio (volta pra 0 quando altera o Major)
-ext.versionPatch = 5 // altera em qualquer release (volta pra 0 quando altera o Minor)
+ext.versionMinor = 1 // altera quando tem um release medio (volta pra 0 quando altera o Major)
+ext.versionPatch = 0 // altera em qualquer release (volta pra 0 quando altera o Minor)
 ext.versionClassifier = "ALFA" // nome da versao (null) para desativar
 //ext.isBeta = true
 ext.minimumSdkVersion = 21 // altera quando precisar aumentar o min SDK version (novas apis)
@@ -14,8 +15,8 @@ ext.minimumSdkVersion = 21 // altera quando precisar aumentar o min SDK version 
 android {
     signingConfigs {
         release {
-            storeFile file('C:\\Users\\tideeh\\Google Drive\\NutriSolver\\app\\app key\\nutrisolver.jks')//PC
-            //storeFile file('C:\\Users\\tidee\\Google Drive\\NutriSolver\\app\\app key\\nutrisolver.jks')//notebook
+            //storeFile file('C:\\Users\\tideeh\\Google Drive\\NutriSolver\\app\\app key\\nutrisolver.jks')//PC
+            storeFile file('C:\\Users\\tidee\\Google Drive\\NutriSolver\\app\\app key\\nutrisolver.jks')//notebook
             storePassword 'AAbb1122'
             keyAlias = 'nutrisolver'
             keyPassword 'AAbb1122'
@@ -52,7 +53,7 @@ private String generateVersionName() {
     if (ext.versionClassifier != null) {
         versionName += "-" + ext.versionClassifier
     }
-    return versionName;
+    return versionName
 }
 
 dependencies {
@@ -71,8 +72,9 @@ dependencies {
     implementation 'com.facebook.android:facebook-android-sdk:5.11.0'
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'com.google.android.gms:play-services-auth:17.0.0'
-    compile('com.crashlytics.sdk.android:crashlytics:2.7.0-SNAPSHOT@aar') {
-        transitive = true;
+    implementation 'com.google.firebase:firebase-perf:19.0.2'
+    implementation('com.crashlytics.sdk.android:crashlytics:2.7.0-SNAPSHOT@aar') {
+        transitive = true
     }
 }
 

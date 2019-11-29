@@ -3,7 +3,6 @@ package br.com.nutrisolver.activitys
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -12,29 +11,27 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ListView
 import android.widget.ProgressBar
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import br.com.nutrisolver.R
 import br.com.nutrisolver.objects.Fazenda
 import br.com.nutrisolver.tools.AdapterFazenda
 import br.com.nutrisolver.tools.DataBaseUtil
 import br.com.nutrisolver.tools.UserUtil
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.gms.tasks.Task
-import com.google.firebase.firestore.QuerySnapshot
 
 class SelecionarFazenda : AppCompatActivity() {
-    private val sharedpreferences : SharedPreferences by lazy {
-        getSharedPreferences("MyPref", Context.MODE_PRIVATE)
-    }
+    private lateinit var sharedpreferences: SharedPreferences
 
     private lateinit var listView_Fazendas: ListView
     private lateinit var adapterFazenda: AdapterFazenda
     private lateinit var progressBar: ProgressBar
-    private lateinit var my_toolbar : Toolbar
+    private lateinit var my_toolbar: Toolbar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_selecionar_fazenda)
+
+        sharedpreferences = getSharedPreferences("MyPref", Context.MODE_PRIVATE)
 
         progressBar = findViewById(R.id.progress_bar)
 
@@ -52,7 +49,10 @@ class SelecionarFazenda : AppCompatActivity() {
             AdapterView.OnItemClickListener { parent, view, position, id ->
                 val editor = sharedpreferences.edit()
                 editor.putString("fazenda_corrente_id", adapterFazenda.getItemIdString(position))
-                editor.putString("fazenda_corrente_nome", (adapterFazenda.getItem(position) as Fazenda).nome)
+                editor.putString(
+                    "fazenda_corrente_nome",
+                    (adapterFazenda.getItem(position) as Fazenda).nome
+                )
                 editor.apply()
 
                 val it = Intent(view.context, Principal::class.java)
@@ -64,13 +64,17 @@ class SelecionarFazenda : AppCompatActivity() {
     private fun atualiza_lista_de_fazendas() {
         progressBar.visibility = View.VISIBLE
 
-        DataBaseUtil.getDocumentsWhereEqualTo("fazendas", "dono_uid",UserUtil.getCurrentUser()?.uid ?: "-1")
+        DataBaseUtil.getDocumentsWhereEqualTo(
+            "fazendas",
+            "dono_uid",
+            UserUtil.getCurrentUser()?.uid ?: "-1"
+        )
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     Log.i("MY_FIRESTORE", "successful")
                     adapterFazenda.clear()
                     val documents = task.result
-                    if(documents != null){
+                    if (documents != null) {
                         Log.i("MY_FIRESTORE", "!= null")
                         for (document in documents) {
                             val fazenda = document.toObject(Fazenda::class.java)
@@ -142,5 +146,14 @@ class SelecionarFazenda : AppCompatActivity() {
 
         startActivity(Intent(this, Login::class.java))
         finish()
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        if (!UserUtil.isLogged()) {
+            startActivity(Intent(this, Login::class.java))
+            finish()
+        }
     }
 }

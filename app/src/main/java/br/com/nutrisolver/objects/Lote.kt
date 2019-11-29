@@ -7,8 +7,9 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class Lote() : Parcelable {
-    var id : String = UUID.randomUUID().toString()
-    var data_criacao: String = SimpleDateFormat("dd/MM/yyyy HH.mm.ss").format(Timestamp(System.currentTimeMillis()))
+    var id: String = UUID.randomUUID().toString()
+    var data_criacao: String =
+        SimpleDateFormat("dd/MM/yyyy HH.mm.ss").format(Timestamp(System.currentTimeMillis()))
 
     var dono_uid: String = "-1"
     var fazenda_id: String = "-1"

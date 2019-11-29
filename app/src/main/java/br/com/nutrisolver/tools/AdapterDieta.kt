@@ -7,9 +7,9 @@ import android.widget.BaseAdapter
 import android.widget.TextView
 import br.com.nutrisolver.R
 import br.com.nutrisolver.objects.Dieta
-import java.util.ArrayList
+import java.util.*
 
-class AdapterDieta(private val act : Activity?) : BaseAdapter() {
+class AdapterDieta(private val act: Activity?) : BaseAdapter() {
     val list_items: ArrayList<Dieta> = ArrayList()
 
     override fun getCount(): Int {
@@ -33,7 +33,7 @@ class AdapterDieta(private val act : Activity?) : BaseAdapter() {
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View? {
-        if(act == null){
+        if (act == null) {
             return null
         }
 

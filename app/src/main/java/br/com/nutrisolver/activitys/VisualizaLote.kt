@@ -92,6 +92,7 @@ class VisualizaLote : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
+
         if (!isLogged()) {
             startActivity(Intent(this, Login::class.java))
             finish()

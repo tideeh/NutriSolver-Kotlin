@@ -18,15 +18,15 @@ import io.fabric.sdk.android.Fabric
 
 class SplashScreen : AppCompatActivity() {
 
-    private val sharedpreferences : SharedPreferences by lazy {
-        getSharedPreferences("MyPref", Context.MODE_PRIVATE)
-    }
+    private lateinit var sharedpreferences : SharedPreferences
 
     private var fazenda_corrente_id : String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash_screen)
+
+        sharedpreferences = getSharedPreferences("MyPref", Context.MODE_PRIVATE)
 
         Fabric.with(this, Crashlytics())
 
