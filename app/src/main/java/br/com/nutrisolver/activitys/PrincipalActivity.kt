@@ -19,13 +19,16 @@ import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.viewpager.widget.ViewPager
 import br.com.nutrisolver.R
-import br.com.nutrisolver.objects.Fazenda
-import br.com.nutrisolver.tools.DataBaseUtil
-import br.com.nutrisolver.tools.TabsAdapter
-import br.com.nutrisolver.tools.UserUtil
+import br.com.nutrisolver.models.Fazenda
+import br.com.nutrisolver.utils.DataBaseUtil
+import br.com.nutrisolver.adapters.TabsAdapter
+import br.com.nutrisolver.fragments.DietasFragment
+import br.com.nutrisolver.fragments.LotesFragment
+import br.com.nutrisolver.fragments.TestesFragment
+import br.com.nutrisolver.utils.UserUtil
 import com.google.android.material.tabs.TabLayout
 
-class Principal : AppCompatActivity() {
+class PrincipalActivity : AppCompatActivity() {
     internal lateinit var lotesFragment: LotesFragment
     internal lateinit var dietasFragment: DietasFragment
     internal lateinit var testesFragment: TestesFragment
@@ -107,7 +110,7 @@ class Principal : AppCompatActivity() {
         super.onStart()
 
         if (!UserUtil.isLogged()) {
-            startActivity(Intent(this, Login::class.java))
+            startActivity(Intent(this, LoginActivity::class.java))
             finish()
         }
 
@@ -117,7 +120,8 @@ class Principal : AppCompatActivity() {
     }
 
     private fun inicia_tab_fragments() {
-        tabsAdapter = TabsAdapter(supportFragmentManager, 3)
+        tabsAdapter =
+            TabsAdapter(supportFragmentManager, 3)
         viewPager = findViewById(R.id.view_pager)
         tabLayout = findViewById(R.id.tabLayout)
 
@@ -212,7 +216,7 @@ class Principal : AppCompatActivity() {
 
                         val opcoes = fazendas_nomes.toTypedArray()
                         val spn_adapter =
-                            ArrayAdapter(this@Principal, R.layout.spinner_layout, opcoes)
+                            ArrayAdapter(this@PrincipalActivity, R.layout.spinner_layout, opcoes)
                         spinner.adapter = spn_adapter
 
                         spinner.setSelection(fazendas_ids.indexOf(fazenda_corrente_id))
@@ -298,7 +302,7 @@ class Principal : AppCompatActivity() {
         editor.remove("fazenda_corrente_nome")
         editor.apply()
 
-        startActivity(Intent(this, Login::class.java))
+        startActivity(Intent(this, LoginActivity::class.java))
         finish()
     }
 
@@ -327,7 +331,7 @@ class Principal : AppCompatActivity() {
     }
 
     fun sidebar_testar_amostra(v: View) {
-        startActivity(Intent(this, ExecutarTeste1::class.java))
+        startActivity(Intent(this, ExecutarTeste1Activity::class.java))
     }
 
     companion object {

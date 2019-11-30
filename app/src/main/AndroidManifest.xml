@@ -16,30 +16,30 @@
         android:supportsRtl="true"
         android:testOnly="false"
         android:theme="@style/AppTheme">
-        <activity android:name=".activitys.ListaDispositivosBT" />
+        <activity android:name=".activitys.ListarDispositivosBTActivity" />
         <activity
-            android:name=".activitys.CadastrarFazenda"
+            android:name=".activitys.CadastrarFazendaActivity"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".activitys.ExecutarTeste1" />
-        <activity android:name=".activitys.CadastrarDieta" />
+        <activity android:name=".activitys.ExecutarTeste1Activity" />
+        <activity android:name=".activitys.CadastrarDietaActivity" />
         <activity
-            android:name=".activitys.CadastrarLote"
+            android:name=".activitys.CadastrarLoteActivity"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".activitys.VisualizaLote" />
+        <activity android:name=".activitys.VisualizarLoteActivity" />
         <activity
-            android:name=".activitys.Register"
+            android:name=".activitys.RegistrarActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".activitys.SelecionarFazenda"
+            android:name=".activitys.SelecionarFazendaActivity"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".activitys.Principal" />
+        <activity android:name=".activitys.PrincipalActivity" />
         <activity
-            android:name=".activitys.Login"
+            android:name=".activitys.LoginActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".activitys.SplashScreen"
+            android:name=".activitys.SplashScreenActivity"
             android:screenOrientation="portrait"
             android:theme="@style/TelaCheia">
             <intent-filter>

@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activitys.LotesFragment">
+    tools:context=".fragments.LotesFragment">
 
     <ListView
         android:id="@+id/lista_lotes"

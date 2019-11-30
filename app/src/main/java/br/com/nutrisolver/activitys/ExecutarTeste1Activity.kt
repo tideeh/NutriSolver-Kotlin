@@ -19,53 +19,44 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import br.com.nutrisolver.R
-import br.com.nutrisolver.tools.ToastUtil.show
-import br.com.nutrisolver.tools.UserUtil.isLogged
+import br.com.nutrisolver.utils.*
+import br.com.nutrisolver.utils.ToastUtil.show
+import br.com.nutrisolver.utils.UserUtil.isLogged
 import java.io.InputStream
 import java.io.OutputStream
 import java.util.*
 
-class ExecutarTeste1 : AppCompatActivity() {
+class ExecutarTeste1Activity : AppCompatActivity() {
     val TOAST = "toast"
-    private val MESSAGE_READ = 0
-    private val MESSAGE_WRITE = 1
-    private val MESSAGE_TOAST = 2
-    private val BTMODULEUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
-    private val DESLIGAR_LED = "0"
-    private val LIGAR_LED = "1"
-    private val LIGAR_BUZZER = "2"
-    private val DESLIGAR_BUZZER = "3"
-    private val CONECTAR_DISPOSITIVO_REQUEST = 1001
-    private val REQUEST_ENABLE_BT = 1
+    private val BT_MODULE_UUID = UUID.fromString(BT_MODULE_UUID_STRING)
 
     val bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
-    lateinit var textView_bt_read: TextView
-    lateinit var textView_bt_send: TextView
+    lateinit var textviewBtRead: TextView
+    lateinit var textviewBtSend: TextView
     var startTime: Long = 0
     var timerHandler = Handler()
-    private var device_mac_address: String = "-1"
-    private var bt_socket: BluetoothSocket? = null
-    private var bt_device: BluetoothDevice? = null
-    private var thread_para_conectar: ConnectThread? = null
-    private var thread_conectada: ConnectedThread? = null
-    private var bluetooth_io: Handler? = null
+    private var deviceMacAddress: String = DEFAULT_STRING_VALUE
+    private var bluetoothSocket: BluetoothSocket? = null
+    private var bluetoothDevice: BluetoothDevice? = null
+    private var threadParaConectar: ConnectThread? = null
+    private var threadConectada: ConnectedThread? = null
+    private var bluetoothIo: Handler? = null
     private lateinit var progressBar: ProgressBar
     private var estado = "0"
-    private lateinit var tempo_para_execucao: EditText
-    private var TEMPO_DO_TESTE = 10
-    private lateinit var sharedpreferences: SharedPreferences
+    private lateinit var editTextTempoParaExecucao: EditText
+    private var tempoDoTeste = 10
+    private lateinit var sharedPreferences: SharedPreferences
 
     var timerRunnable = object : Runnable {
         override fun run() {
-            var millis: Long = System.currentTimeMillis() - startTime
+            val millis: Long = System.currentTimeMillis() - startTime
             var seconds = (millis / 1000).toInt()
-            var minutes = seconds / 60
             seconds %= 60
 
-            Log.i("MY_TESTE", ": $TEMPO_DO_TESTE")
+            Log.i("MY_TESTE", ": $tempoDoTeste")
 
             findViewById<TextView>(R.id.teste_timer).text =
-                (TEMPO_DO_TESTE - seconds - 1).toString()
+                (tempoDoTeste - seconds - 1).toString()
 
             timerHandler.postDelayed(this, 500)
         }
@@ -76,18 +67,18 @@ class ExecutarTeste1 : AppCompatActivity() {
         setContentView(R.layout.activity_executar_teste1)
 
         progressBar = findViewById(R.id.progress_bar)
-        tempo_para_execucao = findViewById(R.id.tempo_para_execucao)
-        textView_bt_read = findViewById(R.id.leitura_bluetooth_debug)
-        textView_bt_send = findViewById(R.id.envio_bluetooth_debug)
-        sharedpreferences = getSharedPreferences("MyPref", Context.MODE_PRIVATE)
+        editTextTempoParaExecucao = findViewById(R.id.tempo_para_execucao)
+        textviewBtRead = findViewById(R.id.leitura_bluetooth_debug)
+        textviewBtSend = findViewById(R.id.envio_bluetooth_debug)
+        sharedPreferences = getSharedPreferences(SP_NOME, Context.MODE_PRIVATE)
 
         //bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
 
-        bluetooth_io = @SuppressLint("HandlerLeak")
+        bluetoothIo = @SuppressLint("HandlerLeak")
         object : Handler() {
             override fun handleMessage(msg: Message) {
                 when (msg.what) {
-                    MESSAGE_WRITE -> {
+                    MESSAGE_WHAT_WRITE -> {
                         val writeBuf = msg.obj as ByteArray
                         val writeMessage = String(writeBuf, 0, writeBuf.size)
                         Log.i(
@@ -95,9 +86,9 @@ class ExecutarTeste1 : AppCompatActivity() {
                             "write: " + writeMessage + "; nBytes: " + writeBuf.size
                         )
                         val aux1 = "Enviado: $writeMessage"
-                        textView_bt_send.text = aux1
+                        textviewBtSend.text = aux1
                     }
-                    MESSAGE_READ -> {
+                    MESSAGE_WHAT_READ -> {
                         val readBuf = msg.obj as ByteArray
                         // construct a string from the valid bytes in the buffer
                         val readMessage = String(readBuf, 0, msg.arg1)
@@ -106,10 +97,10 @@ class ExecutarTeste1 : AppCompatActivity() {
                             "read: " + readMessage + "; nBytes: " + msg.arg1
                         )
                         val aux2 = "Recebido: $readMessage"
-                        textView_bt_read.text = aux2
+                        textviewBtRead.text = aux2
                     }
-                    MESSAGE_TOAST -> show(
-                        this@ExecutarTeste1,
+                    MESSAGE_WHAT_TOAST -> show(
+                        this@ExecutarTeste1Activity,
                         msg.data.getString(TOAST) ?: "-1",
                         Toast.LENGTH_SHORT
                     )
@@ -117,7 +108,7 @@ class ExecutarTeste1 : AppCompatActivity() {
             }
         }
 
-        configura_toolbar()
+        configuraToolbar()
 
     }
 
@@ -125,61 +116,61 @@ class ExecutarTeste1 : AppCompatActivity() {
         super.onStart()
 
         if (!isLogged()) {
-            startActivity(Intent(this, Login::class.java))
+            startActivity(Intent(this, LoginActivity::class.java))
             finish()
         }
-        check_bt_state() // verifica se o bluetooth existe, caso exista e esteja desligado, pede para ligar
+        checkBtState() // verifica se o bluetooth existe, caso exista e esteja desligado, pede para ligar
     }
 
     override fun onStop() {
         super.onStop()
-        if (thread_conectada != null)
-            (thread_conectada as ConnectedThread).cancel()
+        if (threadConectada != null)
+            (threadConectada as ConnectedThread).cancel()
     }
 
     override fun onDestroy() {
         super.onDestroy()
 
-        if (thread_para_conectar != null)
-            (thread_para_conectar as ConnectThread).cancel()
+        if (threadParaConectar != null)
+            (threadParaConectar as ConnectThread).cancel()
     }
 
-    private fun check_bt_state() {
+    private fun checkBtState() {
         when {
             bluetoothAdapter == null -> {
-                show(this, "Device does not support bluetooth", Toast.LENGTH_LONG)
+                show(this, getString(R.string.dispositivo_nao_suporta_bluetooth), Toast.LENGTH_LONG)
                 finish()
             }
             bluetoothAdapter.isEnabled -> { // se esta ativado, entao verifica a conexao
-                check_bt_connection()
+                checkBtConnection()
             }
             else -> { // pede permissao para ligar o bt
                 val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
-                startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT)
+                startActivityForResult(enableBtIntent, ACTIVITY_REQUEST_LIGAR_BT)
             }
         }
     }
 
-    private fun check_bt_connection() {
-        device_mac_address = sharedpreferences.getString("device_mac_address", "-1") ?: "-1"
-        Log.i("MY_BLUETOOTH", "check_bt: $device_mac_address")
-        if (device_mac_address.equals("-1")) { // inicia a activity para conectar em um dispositovo
+    private fun checkBtConnection() {
+        deviceMacAddress = sharedPreferences.getString(SP_KEY_DEVICE_MAC_ADDRESS, DEFAULT_STRING_VALUE) ?: DEFAULT_STRING_VALUE
+        Log.i("MY_BLUETOOTH", "check_bt: $deviceMacAddress")
+        if (deviceMacAddress == DEFAULT_STRING_VALUE) { // inicia a activity para conectar em um dispositovo
             startActivityForResult(
-                Intent(this, ListaDispositivosBT::class.java),
-                CONECTAR_DISPOSITIVO_REQUEST
+                Intent(this, ListarDispositivosBTActivity::class.java),
+                ACTIVITY_REQUEST_CONECTAR_DISPOSITIVO_BT
             )
         } else {
-            if (bt_socket != null) {
-                if ((bt_socket as BluetoothSocket).isConnected) { // ja esta conectado
+            if (bluetoothSocket != null) {
+                if ((bluetoothSocket as BluetoothSocket).isConnected) { // ja esta conectado
                     Log.i("MY_BLUETOOTH", "check_bt: jah conectado")
                     return
                 }
             }
-            bt_device = bluetoothAdapter?.getRemoteDevice(device_mac_address)
-            thread_para_conectar =
-                ConnectThread(bt_device)
+            bluetoothDevice = bluetoothAdapter?.getRemoteDevice(deviceMacAddress)
+            threadParaConectar =
+                ConnectThread(bluetoothDevice)
             progressBar.visibility = View.VISIBLE
-            (thread_para_conectar as ConnectThread).start()
+            (threadParaConectar as ConnectThread).start()
         }
     }
 
@@ -189,32 +180,33 @@ class ExecutarTeste1 : AppCompatActivity() {
         data: Intent?
     ) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_ENABLE_BT) {
+        if (requestCode == ACTIVITY_REQUEST_LIGAR_BT) {
             if (resultCode == Activity.RESULT_OK) { // bluetooth ativado, agora verifica a conexao
-                check_bt_connection()
+                checkBtConnection()
             } else { // bluetooth nao foi ativado
-                show(this, "Falha ao ativar o bluetooth", Toast.LENGTH_LONG)
+                show(this, getString(R.string.falha_ao_ativar_o_bluetooth), Toast.LENGTH_LONG)
                 finish()
             }
         }
-        if (requestCode == CONECTAR_DISPOSITIVO_REQUEST) {
+        if (requestCode == ACTIVITY_REQUEST_CONECTAR_DISPOSITIVO_BT) {
             if (resultCode == Activity.RESULT_OK) {
-                device_mac_address = data?.getStringExtra("device_mac_address") ?: "-1"
+                deviceMacAddress = data?.getStringExtra(INTENT_KEY_DEVICE_MAC_ADDRESS) ?: DEFAULT_STRING_VALUE
+
                 // salva para usar futuramente (evita ficar selecionando o dispositivo toda hora)
-                val editor = sharedpreferences.edit()
-                editor.putString("device_mac_address", device_mac_address)
+                val editor = sharedPreferences.edit()
+                editor.putString(SP_KEY_DEVICE_MAC_ADDRESS, deviceMacAddress)
                 editor.apply()
-                Log.i("MY_BLUETOOTH", "act result: $device_mac_address")
+                Log.i("MY_BLUETOOTH", "act result: $deviceMacAddress")
             } else {
-                show(this, "Falha ao selecionar um dispositivo", Toast.LENGTH_LONG)
+                show(this, getString(R.string.falha_ao_selecionar_um_dispositivo), Toast.LENGTH_LONG)
                 finish()
             }
         }
     }
 
-    private fun configura_toolbar() { // adiciona a barra de tarefas na tela
-        val my_toolbar = findViewById<Toolbar>(R.id.my_toolbar_main)
-        setSupportActionBar(my_toolbar)
+    private fun configuraToolbar() { // adiciona a barra de tarefas na tela
+        val myToolbar = findViewById<Toolbar>(R.id.my_toolbar_main)
+        setSupportActionBar(myToolbar)
         // adiciona a seta de voltar na barra de tarefas
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -230,63 +222,63 @@ class ExecutarTeste1 : AppCompatActivity() {
         }
     }
 
-    fun btn_ligar_teste(view: View?) {
-        val tempo_aux = tempo_para_execucao.text.toString()
-        if (tempo_aux.isEmpty()) {
-            show(this, "Digite a duração do teste!", Toast.LENGTH_SHORT)
+    fun btnLigarTeste(view: View?) {
+        val tempoAux = editTextTempoParaExecucao.text.toString()
+        if (tempoAux.isEmpty()) {
+            show(this, getString(R.string.digite_a_duracao_do_teste), Toast.LENGTH_SHORT)
             return
         }
-        if (bt_socket == null) {
-            show(this, "Dispositivo não conectado", Toast.LENGTH_SHORT)
+        if (bluetoothSocket == null) {
+            show(this, getString(R.string.dispositivo_nao_conectado), Toast.LENGTH_SHORT)
             return
         }
-        if (!((bt_socket as BluetoothSocket).isConnected)) { // nao esta conectado
-            show(this, "Dispositivo não conectado", Toast.LENGTH_SHORT)
+        if (!((bluetoothSocket as BluetoothSocket).isConnected)) { // nao esta conectado
+            show(this, getString(R.string.dispositivo_nao_conectado), Toast.LENGTH_SHORT)
             return
         }
-        if (tempo_aux.toInt() < 1) {
-            show(this, "Digite um valor maior que 0", Toast.LENGTH_SHORT)
+        if (tempoAux.toInt() < 1) {
+            show(this, getString(R.string.digite_um_valor_maior_que_0), Toast.LENGTH_SHORT)
             return
         }
         if (estado == "0") { // ligar
-            estado = alterarEstado(LIGAR_LED)
-            TEMPO_DO_TESTE = tempo_aux.toInt()
-            Log.i("MY_TESTE", "tempo do teste: $TEMPO_DO_TESTE")
-            (findViewById<View>(R.id.btn_ligar) as Button).text = "Teste em andamento.."
+            estado = alterarEstado(BT_COMMAND_LIGAR_LED)
+            tempoDoTeste = tempoAux.toInt()
+            Log.i("MY_TESTE", "tempo do teste: $tempoDoTeste")
+            (findViewById<View>(R.id.btn_ligar) as Button).text = getString(R.string.teste_em_andamento)
             try {
                 val imm =
                     getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 imm.hideSoftInputFromWindow(currentFocus!!.windowToken, 0)
             } catch (e: Exception) { // TODO: handle exception
             }
-            (findViewById<View>(R.id.teste_status) as TextView).text = "Teste em andamento.."
+            (findViewById<View>(R.id.teste_status) as TextView).text = getString(R.string.teste_em_andamento)
             startTime = System.currentTimeMillis()
             timerHandler.postDelayed(timerRunnable, 0)
             val handler = Handler()
-            handler.postDelayed({ finalizarTeste() }, tempo_aux.toInt() * 1000.toLong())
+            handler.postDelayed({ finalizarTeste() }, tempoAux.toInt() * 1000.toLong())
             val handler2 = Handler()
-            handler2.postDelayed({ desligaBuzzy() }, tempo_aux.toInt() * 1000 + 500.toLong())
+            handler2.postDelayed({ desligaBuzzy() }, tempoAux.toInt() * 1000 + 500.toLong())
         }
     }
 
     private fun desligaBuzzy() {
-        estado = alterarEstado(DESLIGAR_BUZZER)
-        (findViewById<View>(R.id.btn_ligar) as Button).text = "Executar"
-        estado = alterarEstado(DESLIGAR_LED)
-        (findViewById<View>(R.id.teste_status) as TextView).text = "Teste finalizado!"
+        estado = alterarEstado(BT_COMMAND_DESLIGAR_BUZZER)
+        (findViewById<View>(R.id.btn_ligar) as Button).text = getString(R.string.executar)
+        estado = alterarEstado(BT_COMMAND_DESLIGAR_LED)
+        (findViewById<View>(R.id.teste_status) as TextView).text = getString(R.string.teste_finalizado)
     }
 
     private fun finalizarTeste() {
-        estado = alterarEstado(LIGAR_BUZZER)
-        (findViewById<View>(R.id.teste_status) as TextView).text = "Finalizando.."
+        estado = alterarEstado(BT_COMMAND_LIGAR_BUZZER)
+        (findViewById<View>(R.id.teste_status) as TextView).text = getString(R.string.finalizando)
         timerHandler.removeCallbacks(timerRunnable)
     }
 
     private fun alterarEstado(novoEstado: String): String {
-        if (thread_conectada == null) {
-            show(this, "Dispositivo não conectado", Toast.LENGTH_SHORT)
+        if (threadConectada == null) {
+            show(this, getString(R.string.dispositivo_nao_conectado), Toast.LENGTH_SHORT)
         } else {
-            (thread_conectada as ConnectedThread).write(novoEstado.toByteArray())
+            (threadConectada as ConnectedThread).write(novoEstado.toByteArray())
         }
         return novoEstado
     }
@@ -303,11 +295,11 @@ class ExecutarTeste1 : AppCompatActivity() {
             mmDevice = device
             try { // Get a BluetoothSocket to connect with the given BluetoothDevice.
 // MY_UUID is the app's UUID string, also used in the server code.
-                tmp = device!!.createRfcommSocketToServiceRecord(BTMODULEUUID)
+                tmp = device!!.createRfcommSocketToServiceRecord(BT_MODULE_UUID)
             } catch (e: Exception) {
                 Log.e("MY_BLUETOOTH", "Socket's create() method failed", e)
             }
-            bt_socket = tmp
+            bluetoothSocket = tmp
         }
 
         override fun run() {
@@ -316,16 +308,16 @@ class ExecutarTeste1 : AppCompatActivity() {
             bluetoothAdapter?.cancelDiscovery()
             try { // Connect to the remote device through the socket. This call blocks
 // until it succeeds or throws an exception.
-                this@ExecutarTeste1.runOnUiThread(Runnable {
+                runOnUiThread {
                     (findViewById<View>(R.id.status_bluetooth_debug) as TextView).text =
-                        "Status: conectando.."
-                })
-                bt_socket!!.connect()
+                        getString(R.string.status_conectando)
+                }
+                bluetoothSocket!!.connect()
             } catch (connectException: Exception) {
                 Log.e("MY_BLUETOOTH", "Unable to connect", connectException)
                 // Unable to connect; close the socket and return.
                 try {
-                    bt_socket!!.close()
+                    bluetoothSocket!!.close()
                 } catch (closeException: Exception) {
                     Log.e(
                         "MY_BLUETOOTH",
@@ -333,37 +325,37 @@ class ExecutarTeste1 : AppCompatActivity() {
                         closeException
                     )
                 }
-                this@ExecutarTeste1.runOnUiThread(Runnable {
+                runOnUiThread {
                     progressBar.visibility = View.GONE
                     show(
-                        this@ExecutarTeste1,
-                        "Falha ao conectar no dispositivo",
+                        this@ExecutarTeste1Activity,
+                        getString(R.string.falha_ao_conectar_no_dispositivo),
                         Toast.LENGTH_LONG
                     )
-                    sharedpreferences.edit().remove("device_mac_address").apply()
+                    sharedPreferences.edit().remove(SP_KEY_DEVICE_MAC_ADDRESS).apply()
                     //startActivityForResult(Intent( this@ExecutarTeste1,ListaDispositivosBT::class.java), CONECTAR_DISPOSITIVO_REQUEST)
                     (findViewById<View>(R.id.status_bluetooth_debug) as TextView).text =
-                        "Status: desconectado"
+                        getString(R.string.status_desconectado)
                     finish()
-                })
+                }
                 return
             }
-            this@ExecutarTeste1.runOnUiThread(Runnable {
+            runOnUiThread {
                 progressBar.visibility = View.GONE
                 (findViewById<View>(R.id.status_bluetooth_debug) as TextView).text =
-                    "Status: conectado"
-            })
+                    getString(R.string.status_conectado)
+            }
             // The connection attempt succeeded. Perform work associated with
 // the connection in a separate thread.
-            thread_conectada = ConnectedThread()
-            (thread_conectada as ConnectedThread).start()
+            threadConectada = ConnectedThread()
+            (threadConectada as ConnectedThread).start()
             interrupt()
         }
 
         fun cancel() {
             Log.i("MY_BLUETOOTH", "cancel thread connect")
             try {
-                bt_socket!!.close()
+                bluetoothSocket!!.close()
             } catch (e: Exception) {
                 Log.e("MY_BLUETOOTH", "Could not close the connect socket", e)
             }
@@ -390,8 +382,8 @@ class ExecutarTeste1 : AppCompatActivity() {
                     numBytes = mmInStream!!.read(mmBuffer)
                     //Log.i("MY_BLUETOOTH", "while thread connected: $numBytes")
                     // Send the obtained bytes to the UI activity.
-                    val readMsg: Message = bluetooth_io!!.obtainMessage(
-                        MESSAGE_READ,
+                    val readMsg: Message = bluetoothIo!!.obtainMessage(
+                        MESSAGE_WHAT_READ,
                         numBytes,
                         -1,
                         mmBuffer
@@ -401,19 +393,19 @@ class ExecutarTeste1 : AppCompatActivity() {
                 } catch (e: Exception) {
                     Log.i("MY_BLUETOOTH", "Input stream was disconnected $e")
                     try {
-                        bt_socket!!.close()
+                        bluetoothSocket!!.close()
                     } catch (e2: Exception) {
                         Log.e("MY_BLUETOOTH", "Could not close the connect socket", e2)
                     }
-                    this@ExecutarTeste1.runOnUiThread(Runnable {
+                    runOnUiThread {
                         (findViewById<View>(R.id.status_bluetooth_debug) as TextView).text =
-                            "Status: desconectado"
+                            getString(R.string.status_desconectado)
                         show(
-                            this@ExecutarTeste1,
-                            "Input stream desconectado",
+                            this@ExecutarTeste1Activity,
+                            getString(R.string.fluxo_entrada_interrompido),
                             Toast.LENGTH_LONG
                         )
-                    })
+                    }
                     break
                 }
             }
@@ -421,26 +413,26 @@ class ExecutarTeste1 : AppCompatActivity() {
         }
 
         // Call this from the main activity to send data to the remote device.
-        fun write(bytes: ByteArray?) {
+        fun write(bytes: ByteArray) {
             try {
                 mmOutStream!!.write(bytes)
                 // Share the sent message with the UI activity.
                 val writtenMsg: Message =
-                    bluetooth_io!!.obtainMessage(MESSAGE_WRITE, bytes)
+                    bluetoothIo!!.obtainMessage(MESSAGE_WHAT_WRITE, bytes)
                 writtenMsg.sendToTarget()
             } catch (e: Exception) {
                 try {
                     Log.e("MY_BLUETOOTH", "Error occurred when sending data", e)
                     // Send a failure message back to the activity.
                     val writeErrorMsg: Message =
-                        bluetooth_io!!.obtainMessage(MESSAGE_TOAST)
+                        bluetoothIo!!.obtainMessage(MESSAGE_WHAT_TOAST)
                     val bundle = Bundle()
                     bundle.putString(
                         "toast",
                         "Couldn't send data to the other device"
                     )
                     writeErrorMsg.data = bundle
-                    bluetooth_io!!.sendMessage(writeErrorMsg)
+                    bluetoothIo!!.sendMessage(writeErrorMsg)
                 } catch (e: Exception) {
                 }
             }
@@ -450,7 +442,7 @@ class ExecutarTeste1 : AppCompatActivity() {
         fun cancel() {
             Log.i("MY_BLUETOOTH", "cancel thread connected")
             try {
-                bt_socket!!.close()
+                bluetoothSocket!!.close()
             } catch (e: Exception) {
                 Log.e("MY_BLUETOOTH", "Could not close the connect socket", e)
             }
@@ -463,12 +455,12 @@ class ExecutarTeste1 : AppCompatActivity() {
             // Get the input and output streams; using temp objects because
 // member streams are final.
             try {
-                tmpIn = bt_socket?.inputStream
+                tmpIn = bluetoothSocket?.inputStream
             } catch (e: Exception) {
                 Log.e("MY_BLUETOOTH", "Error occurred when creating input stream", e)
             }
             try {
-                tmpOut = bt_socket?.outputStream
+                tmpOut = bluetoothSocket?.outputStream
             } catch (e: Exception) {
                 Log.e("MY_BLUETOOTH", "Error occurred when creating output stream", e)
             }
@@ -479,12 +471,12 @@ class ExecutarTeste1 : AppCompatActivity() {
     }
 
     fun btn_desconectar(v: View) {
-        val editor = sharedpreferences.edit()
-        editor.remove("device_mac_address")
+        val editor = sharedPreferences.edit()
+        editor.remove(SP_KEY_DEVICE_MAC_ADDRESS)
         editor.apply()
 
-        if (thread_conectada != null)
-            (thread_conectada as ConnectedThread).cancel()
+        if (threadConectada != null)
+            (threadConectada as ConnectedThread).cancel()
 
         finish()
     }

@@ -1,4 +1,4 @@
-package br.com.nutrisolver.activitys
+package br.com.nutrisolver.fragments
 
 
 import android.content.Context
@@ -14,13 +14,16 @@ import android.widget.ListView
 import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
 import br.com.nutrisolver.R
-import br.com.nutrisolver.objects.Dieta
-import br.com.nutrisolver.tools.AdapterDieta
-import br.com.nutrisolver.tools.DataBaseUtil
+import br.com.nutrisolver.activitys.CadastrarDietaActivity
+import br.com.nutrisolver.activitys.PrincipalActivity
+import br.com.nutrisolver.models.Dieta
+import br.com.nutrisolver.adapters.AdapterDieta
+import br.com.nutrisolver.utils.DataBaseUtil
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.util.*
 
-class DietasFragment : Fragment(), Principal.DataFromActivityToFragment {
+class DietasFragment : Fragment(),
+    PrincipalActivity.DataFromActivityToFragment {
     lateinit var my_view: View
     private lateinit var listView_dietas: ListView
     private lateinit var adapterDieta: AdapterDieta
@@ -61,7 +64,7 @@ class DietasFragment : Fragment(), Principal.DataFromActivityToFragment {
         atualiza_lista_de_dietas()
 
         view.findViewById<FloatingActionButton>(R.id.fab_cadastrar_dieta).setOnClickListener {
-            val ite = Intent(activity, CadastrarDieta::class.java)
+            val ite = Intent(activity, CadastrarDietaActivity::class.java)
             startActivity(ite)
         }
     }

@@ -45,4 +45,26 @@
     <string name="nome_da_dieta">Nome da Dieta</string>
     <string name="dietas">Dietas</string>
     <string name="cadastrar_dieta">Cadastrar Dieta</string>
+    <string name="fazenda">Fazenda</string>
+    <string name="selecione_pelo_menos_um_ingrediente">Selecione pelo menos um ingrediente</string>
+    <string name="dieta_cadastrada_com_sucesso">Dieta cadastrada com sucesso!</string>
+    <string name="campo_necessario">Campo necessário!</string>
+    <string name="selecione">Selecione</string>
+    <string name="fazenda_cadastrada_com_sucesso">Fazenda cadastrada com sucesso!</string>
+    <string name="lote_cadastrado_com_sucesso">Lote cadastrado com sucesso!</string>
+    <string name="dispositivo_nao_suporta_bluetooth">Dispositivo não suporta bluetooth</string>
+    <string name="falha_ao_ativar_o_bluetooth">Falha ao ativar o bluetooth</string>
+    <string name="falha_ao_selecionar_um_dispositivo">Falha ao selecionar um dispositivo</string>
+    <string name="digite_a_duracao_do_teste">Digite a duração do teste!</string>
+    <string name="dispositivo_nao_conectado">Dispositivo não conectado</string>
+    <string name="digite_um_valor_maior_que_0">Digite um valor maior que 0</string>
+    <string name="teste_em_andamento">Teste em andamento..</string>
+    <string name="executar">Executar</string>
+    <string name="teste_finalizado">Teste finalizado!</string>
+    <string name="finalizando">Finalizando..</string>
+    <string name="status_conectando">Status: conectando..</string>
+    <string name="falha_ao_conectar_no_dispositivo">Falha ao conectar no dispositivo</string>
+    <string name="status_desconectado">Status: desconectado</string>
+    <string name="status_conectado">Status: conectado</string>
+    <string name="fluxo_entrada_interrompido">Fluxo de entrada interrompido</string>
 </resources>

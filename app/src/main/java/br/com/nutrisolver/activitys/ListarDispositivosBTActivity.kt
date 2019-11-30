@@ -20,11 +20,11 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import br.com.nutrisolver.R
-import br.com.nutrisolver.tools.ToastUtil
-import br.com.nutrisolver.tools.ToastUtil.show
-import br.com.nutrisolver.tools.UserUtil.isLogged
+import br.com.nutrisolver.utils.ToastUtil
+import br.com.nutrisolver.utils.ToastUtil.show
+import br.com.nutrisolver.utils.UserUtil.isLogged
 
-class ListaDispositivosBT : AppCompatActivity() {
+class ListarDispositivosBTActivity : AppCompatActivity() {
     private val REQUEST_ENABLE_BT = 1
     var bluetoothAdapter: BluetoothAdapter? = null
     private lateinit var listView_bt_devices: ListView
@@ -62,7 +62,7 @@ class ListaDispositivosBT : AppCompatActivity() {
                 scanButton.visibility = View.VISIBLE
                 title = "Fim da procura"
                 if (NewDevicesArrayAdapter.count == 0) { //String noDevices = "Nenhum dispositivo encontrado"
-                    ToastUtil.show(context, "Nenhum dispositivo encontrado", Toast.LENGTH_SHORT)
+                    //ToastUtil.show(context, "Nenhum dispositivo encontrado", Toast.LENGTH_SHORT)
 //NewDevicesArrayAdapter.add(noDevices);
                 }
             }
@@ -72,6 +72,8 @@ class ListaDispositivosBT : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_lista_dispositivos_bt)
+
+        NewDevicesArrayAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1)
 
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
         progressBar = findViewById(R.id.progress_bar)
@@ -146,10 +148,9 @@ class ListaDispositivosBT : AppCompatActivity() {
 //findViewById(R.id.title_new_devices).setVisibility(View.VISIBLE);
 // If we're already discovering, stop it
         if (bluetoothAdapter != null) {
-            if ((bluetoothAdapter as BluetoothAdapter).isDiscovering) {
                 (bluetoothAdapter as BluetoothAdapter).cancelDiscovery()
-            }
             // Request discover from BluetoothAdapter
+            NewDevicesArrayAdapter.clear()
             progressBar.visibility = View.VISIBLE
             (bluetoothAdapter as BluetoothAdapter).startDiscovery()
         }
@@ -159,7 +160,7 @@ class ListaDispositivosBT : AppCompatActivity() {
         super.onStart()
 
         if (!isLogged()) {
-            startActivity(Intent(this, Login::class.java))
+            startActivity(Intent(this, LoginActivity::class.java))
             finish()
         }
 
@@ -208,7 +209,7 @@ class ListaDispositivosBT : AppCompatActivity() {
 
     private fun configura_listView() {
         mac_address_new_list = ArrayList()
-        NewDevicesArrayAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1)
+
         listView_new_devices =
             findViewById<View>(R.id.listView_bt_new_devices) as ListView
         listView_new_devices.adapter = NewDevicesArrayAdapter
@@ -258,9 +259,7 @@ class ListaDispositivosBT : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         // Make sure we're not doing discovery anymore
-        if (bluetoothAdapter != null) {
-            bluetoothAdapter!!.cancelDiscovery()
-        }
+        bluetoothAdapter?.cancelDiscovery()
         // Unregister broadcast listeners
         unregisterReceiver(mReceiver)
     }

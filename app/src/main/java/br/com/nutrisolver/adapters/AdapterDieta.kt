@@ -1,4 +1,4 @@
-package br.com.nutrisolver.tools
+package br.com.nutrisolver.adapters
 
 import android.app.Activity
 import android.view.View
@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
 import br.com.nutrisolver.R
-import br.com.nutrisolver.objects.Dieta
+import br.com.nutrisolver.models.Dieta
 import java.util.*
 
 class AdapterDieta(private val act: Activity?) : BaseAdapter() {

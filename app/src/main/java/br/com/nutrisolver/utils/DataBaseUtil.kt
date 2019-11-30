@@ -1,4 +1,4 @@
-package br.com.nutrisolver.tools
+package br.com.nutrisolver.utils
 
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.FirebaseFirestore

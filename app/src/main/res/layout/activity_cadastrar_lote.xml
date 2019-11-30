@@ -52,7 +52,7 @@
                     <Button
                         style="@style/botao_confirmar"
                         android:layout_gravity="center_horizontal"
-                        android:onClick="cadastrar_lote"
+                        android:onClick="cadastrarLote"
                         android:text="@string/cadastrar_lote" />
 
                 </LinearLayout>

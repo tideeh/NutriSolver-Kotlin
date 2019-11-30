@@ -1,4 +1,4 @@
-package br.com.nutrisolver.activitys
+package br.com.nutrisolver.fragments
 
 
 import android.content.Context
@@ -14,13 +14,17 @@ import android.widget.ListView
 import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
 import br.com.nutrisolver.R
-import br.com.nutrisolver.objects.Lote
-import br.com.nutrisolver.tools.AdapterLote
-import br.com.nutrisolver.tools.DataBaseUtil
+import br.com.nutrisolver.activitys.CadastrarLoteActivity
+import br.com.nutrisolver.activitys.PrincipalActivity
+import br.com.nutrisolver.activitys.VisualizarLoteActivity
+import br.com.nutrisolver.models.Lote
+import br.com.nutrisolver.adapters.AdapterLote
+import br.com.nutrisolver.utils.DataBaseUtil
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.util.*
 
-class LotesFragment : Fragment(), Principal.DataFromActivityToFragment {
+class LotesFragment : Fragment(),
+    PrincipalActivity.DataFromActivityToFragment {
 
     lateinit var my_view: View
     private lateinit var listView_lotes: ListView
@@ -68,7 +72,7 @@ class LotesFragment : Fragment(), Principal.DataFromActivityToFragment {
         atualiza_lista_de_lotes()
 
         view.findViewById<FloatingActionButton>(R.id.fab_cadastrar_lote).setOnClickListener {
-            val ite = Intent(activity, CadastrarLote::class.java)
+            val ite = Intent(activity, CadastrarLoteActivity::class.java)
             startActivity(ite)
         }
     }
@@ -134,7 +138,7 @@ class LotesFragment : Fragment(), Principal.DataFromActivityToFragment {
         listView_lotes.adapter = adapterLote
         listView_lotes.onItemClickListener =
             AdapterView.OnItemClickListener { parent, view, position, id ->
-                val it = Intent(view.context, VisualizaLote::class.java)
+                val it = Intent(view.context, VisualizarLoteActivity::class.java)
                 it.putExtra("lote_id", adapterLote.getItemIdString(position))
                 it.putExtra("lote_nome", adapterLote.getItemName(position))
                 startActivity(it)

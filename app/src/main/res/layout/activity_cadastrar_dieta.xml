@@ -76,7 +76,7 @@
                 <Button
                     style="@style/botao_confirmar"
                     android:layout_gravity="center_horizontal"
-                    android:onClick="salvar_dieta"
+                    android:onClick="salvarDieta"
                     android:text="@string/cadastrar_dieta" />
 
             </LinearLayout>

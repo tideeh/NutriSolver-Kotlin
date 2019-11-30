@@ -1,4 +1,4 @@
-package br.com.nutrisolver.tools
+package br.com.nutrisolver.adapters
 
 import android.content.Context
 import android.view.LayoutInflater

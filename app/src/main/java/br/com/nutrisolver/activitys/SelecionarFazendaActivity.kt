@@ -14,12 +14,12 @@ import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import br.com.nutrisolver.R
-import br.com.nutrisolver.objects.Fazenda
-import br.com.nutrisolver.tools.AdapterFazenda
-import br.com.nutrisolver.tools.DataBaseUtil
-import br.com.nutrisolver.tools.UserUtil
+import br.com.nutrisolver.models.Fazenda
+import br.com.nutrisolver.adapters.AdapterFazenda
+import br.com.nutrisolver.utils.DataBaseUtil
+import br.com.nutrisolver.utils.UserUtil
 
-class SelecionarFazenda : AppCompatActivity() {
+class SelecionarFazendaActivity : AppCompatActivity() {
     private lateinit var sharedpreferences: SharedPreferences
 
     private lateinit var listView_Fazendas: ListView
@@ -55,7 +55,7 @@ class SelecionarFazenda : AppCompatActivity() {
                 )
                 editor.apply()
 
-                val it = Intent(view.context, Principal::class.java)
+                val it = Intent(view.context, PrincipalActivity::class.java)
                 startActivity(it)
                 finish()
             }
@@ -97,14 +97,14 @@ class SelecionarFazenda : AppCompatActivity() {
     }
 
     fun cadastrar_fazenda(view: View) {
-        startActivityForResult(Intent(this, CadastrarFazenda::class.java), 1001)
+        startActivityForResult(Intent(this, CadastrarFazendaActivity::class.java), 1001)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == 1001 && resultCode == 1) {
-            startActivity(Intent(this, Principal::class.java))
+            startActivity(Intent(this, PrincipalActivity::class.java))
             finish()
         }
     }
@@ -144,7 +144,7 @@ class SelecionarFazenda : AppCompatActivity() {
         editor.remove("fazenda_corrente_nome")
         editor.apply()
 
-        startActivity(Intent(this, Login::class.java))
+        startActivity(Intent(this, LoginActivity::class.java))
         finish()
     }
 
@@ -152,7 +152,7 @@ class SelecionarFazenda : AppCompatActivity() {
         super.onStart()
 
         if (!UserUtil.isLogged()) {
-            startActivity(Intent(this, Login::class.java))
+            startActivity(Intent(this, LoginActivity::class.java))
             finish()
         }
     }

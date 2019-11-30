@@ -14,33 +14,33 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import br.com.nutrisolver.R
-import br.com.nutrisolver.objects.Fazenda
-import br.com.nutrisolver.tools.DataBaseUtil
-import br.com.nutrisolver.tools.ToastUtil.show
-import br.com.nutrisolver.tools.UserUtil.getCurrentUser
-import br.com.nutrisolver.tools.UserUtil.isLogged
+import br.com.nutrisolver.models.Fazenda
+import br.com.nutrisolver.utils.*
+import br.com.nutrisolver.utils.ToastUtil.show
+import br.com.nutrisolver.utils.UserUtil.getCurrentUser
+import br.com.nutrisolver.utils.UserUtil.isLogged
 
-class CadastrarFazenda : AppCompatActivity() {
+class CadastrarFazendaActivity : AppCompatActivity() {
     //private FirebaseFirestore db;
-    private lateinit var input_nome_fazenda: EditText
+    private lateinit var editTextNomeFazenda: EditText
     private lateinit var progressBar: ProgressBar
-    private lateinit var sharedpreferences: SharedPreferences
+    private lateinit var sharedPreferences: SharedPreferences
     private lateinit var fazenda: Fazenda
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cadastrar_fazenda)
 
-        input_nome_fazenda = findViewById(R.id.cadastrar_nome_da_fazenda)
+        editTextNomeFazenda = findViewById(R.id.cadastrar_nome_da_fazenda)
         progressBar = findViewById(R.id.progress_bar)
-        sharedpreferences = getSharedPreferences("MyPref", Context.MODE_PRIVATE)
+        sharedPreferences = getSharedPreferences(SP_NOME, Context.MODE_PRIVATE)
 
-        configura_toolbar()
+        configuraToolbar()
     }
 
-    private fun configura_toolbar() { // adiciona a barra de tarefas na tela
-        val my_toolbar = findViewById<Toolbar>(R.id.my_toolbar_main)
-        setSupportActionBar(my_toolbar)
+    private fun configuraToolbar() { // adiciona a barra de tarefas na tela
+        val myToolbar = findViewById<Toolbar>(R.id.my_toolbar_main)
+        setSupportActionBar(myToolbar)
         // adiciona a seta de voltar na barra de tarefas
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -50,36 +50,36 @@ class CadastrarFazenda : AppCompatActivity() {
         super.onStart()
 
         if (!isLogged()) {
-            startActivity(Intent(this, Login::class.java))
+            startActivity(Intent(this, LoginActivity::class.java))
             finish()
         }
     }
 
-    fun cadastrar_fazenda(view: View?) {
+    fun cadastrarFazenda(view: View?) {
         if (!validaDados()) {
             return
         }
         progressBar.visibility = View.VISIBLE
-        val nome_fazenda = input_nome_fazenda.text.toString()
+        val nomeFazenda = editTextNomeFazenda.text.toString()
         fazenda = Fazenda()
-        fazenda.nome = nome_fazenda
-        fazenda.dono_uid = getCurrentUser()?.uid ?: "-1"
+        fazenda.nome = nomeFazenda
+        fazenda.dono_uid = getCurrentUser()?.uid ?: DEFAULT_STRING_VALUE
 
-        DataBaseUtil.insertDocument("fazendas", fazenda.id, fazenda)
+        DataBaseUtil.insertDocument(DB_COLLECTION_FAZENDAS, fazenda.id, fazenda)
 
-        val editor = sharedpreferences.edit()
-        editor.putString("fazenda_corrente_id", fazenda.id)
-        editor.putString("fazenda_corrente_nome", fazenda.nome)
+        val editor = sharedPreferences.edit()
+        editor.putString(SP_KEY_FAZENDA_CORRENTE_ID, fazenda.id)
+        editor.putString(SP_KEY_FAZENDA_CORRENTE_NOME, fazenda.nome)
         editor.apply()
 
         val handler = Handler()
-        handler.postDelayed({ finaliza_cadastro() }, 800)
+        handler.postDelayed({ finalizaCadastro() }, 800)
     }
 
-    private fun finaliza_cadastro() {
+    private fun finalizaCadastro() {
         show(
             applicationContext,
-            "Fazenda cadastrada com sucesso!",
+            getString(R.string.fazenda_cadastrada_com_sucesso),
             Toast.LENGTH_SHORT
         )
         progressBar.visibility = View.GONE
@@ -90,12 +90,12 @@ class CadastrarFazenda : AppCompatActivity() {
 
     private fun validaDados(): Boolean {
         var valido = true
-        val nome_fazenda = input_nome_fazenda.text.toString()
-        if (TextUtils.isEmpty(nome_fazenda)) {
-            input_nome_fazenda.error = "Campo necessário."
+        val nomeFazenda = editTextNomeFazenda.text.toString()
+        if (TextUtils.isEmpty(nomeFazenda)) {
+            editTextNomeFazenda.error = getString(R.string.campo_necessario)
             valido = false
         } else {
-            input_nome_fazenda.error = null
+            editTextNomeFazenda.error = null
         }
         return valido
     }

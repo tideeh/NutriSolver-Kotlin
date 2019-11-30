@@ -1,4 +1,4 @@
-package br.com.nutrisolver.tools
+package br.com.nutrisolver.adapters
 
 import android.app.Activity
 import android.util.Log
@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
 import br.com.nutrisolver.R
-import br.com.nutrisolver.objects.Fazenda
+import br.com.nutrisolver.models.Fazenda
 
 class AdapterFazenda(private val act: Activity) : BaseAdapter() {
     private val list_items: MutableList<Fazenda> = mutableListOf()

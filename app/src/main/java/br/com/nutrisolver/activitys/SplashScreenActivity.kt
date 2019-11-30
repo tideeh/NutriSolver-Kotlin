@@ -10,13 +10,13 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import br.com.nutrisolver.BuildConfig
 import br.com.nutrisolver.R
-import br.com.nutrisolver.objects.Fazenda
-import br.com.nutrisolver.tools.DataBaseUtil
-import br.com.nutrisolver.tools.UserUtil
+import br.com.nutrisolver.models.Fazenda
+import br.com.nutrisolver.utils.DataBaseUtil
+import br.com.nutrisolver.utils.UserUtil
 import com.crashlytics.android.Crashlytics
 import io.fabric.sdk.android.Fabric
 
-class SplashScreen : AppCompatActivity() {
+class SplashScreenActivity : AppCompatActivity() {
 
     private lateinit var sharedpreferences : SharedPreferences
 
@@ -43,7 +43,7 @@ class SplashScreen : AppCompatActivity() {
     private fun verificaLogin(){
 
         if(!UserUtil.isLogged()){
-            val it = Intent(this, Login::class.java)
+            val it = Intent(this, LoginActivity::class.java)
             startActivity(it)
             finish()
         }
@@ -63,14 +63,14 @@ class SplashScreen : AppCompatActivity() {
                                     editor.putString("fazenda_corrente_nome", fazenda.nome)
                                     editor.apply()
 
-                                    startActivity(Intent(applicationContext, Principal::class.java))
+                                    startActivity(Intent(applicationContext, PrincipalActivity::class.java))
                                     finish()
                                     return@addOnCompleteListener
                                 }
                             }
                         }
                     }
-                    startActivity(Intent(applicationContext, SelecionarFazenda::class.java))
+                    startActivity(Intent(applicationContext, SelecionarFazendaActivity::class.java))
                     finish()
                 }
         }

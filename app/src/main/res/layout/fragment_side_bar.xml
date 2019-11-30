@@ -6,7 +6,7 @@
     android:background="@android:color/white"
     android:fillViewport="true"
     android:orientation="vertical"
-    tools:context=".tools.SideBar"
+    tools:context=".fragments.SideBarFragment"
     android:id="@+id/nav_view">
 
     <LinearLayout

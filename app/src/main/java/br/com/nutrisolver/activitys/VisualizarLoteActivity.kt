@@ -11,15 +11,12 @@ import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import br.com.nutrisolver.R
-import br.com.nutrisolver.objects.Dieta
-import br.com.nutrisolver.tools.AdapterDieta
-import br.com.nutrisolver.tools.DataBaseUtil
-import br.com.nutrisolver.tools.UserUtil.isLogged
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.firebase.firestore.QuerySnapshot
-import java.util.*
+import br.com.nutrisolver.models.Dieta
+import br.com.nutrisolver.adapters.AdapterDieta
+import br.com.nutrisolver.utils.DataBaseUtil
+import br.com.nutrisolver.utils.UserUtil.isLogged
 
-class VisualizaLote : AppCompatActivity() {
+class VisualizarLoteActivity : AppCompatActivity() {
     private var lote_id: String = "-1"
     private var lote_nome: String = "-1"
     private lateinit var progressBar: ProgressBar
@@ -44,7 +41,7 @@ class VisualizaLote : AppCompatActivity() {
         atualiza_lista_dieta()
         configura_toolbar()
         findViewById<View>(R.id.fab_cadastrar_dieta).setOnClickListener {
-            val ite = Intent(this@VisualizaLote, CadastrarDieta::class.java)
+            val ite = Intent(this@VisualizarLoteActivity, CadastrarDietaActivity::class.java)
             ite.putExtra("lote_selecionado_id", lote_id)
             startActivityForResult(ite, CADASTRAR_DIETA_REQUEST)
         }
@@ -94,7 +91,7 @@ class VisualizaLote : AppCompatActivity() {
         super.onStart()
 
         if (!isLogged()) {
-            startActivity(Intent(this, Login::class.java))
+            startActivity(Intent(this, LoginActivity::class.java))
             finish()
         }
     }

@@ -51,7 +51,7 @@
                     <Button
                         style="@style/botao_confirmar"
                         android:layout_gravity="center_horizontal"
-                        android:onClick="cadastrar_fazenda"
+                        android:onClick="cadastrarFazenda"
                         android:text="@string/cadastrar_fazenda" />
 
                 </LinearLayout>

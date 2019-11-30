@@ -6,8 +6,8 @@ import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import br.com.nutrisolver.R
-import br.com.nutrisolver.tools.ToastUtil
-import br.com.nutrisolver.tools.UserUtil
+import br.com.nutrisolver.utils.ToastUtil
+import br.com.nutrisolver.utils.UserUtil
 import com.facebook.CallbackManager
 import com.facebook.FacebookCallback
 import com.facebook.FacebookException
@@ -19,7 +19,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.ApiException
 
-class Login : AppCompatActivity(), View.OnClickListener {
+class LoginActivity : AppCompatActivity(), View.OnClickListener {
     private val RC_SIGN_IN_GOOGLE = 9001
 
     private lateinit var progressBar: ProgressBar
@@ -55,7 +55,7 @@ class Login : AppCompatActivity(), View.OnClickListener {
             override fun onSuccess(loginResult: LoginResult) {
                 // sucesso, agora autentica com o firebase
                 //Toast.makeText(getApplicationContext(), "Facebook onSuccess", Toast.LENGTH_SHORT).show();
-                UserUtil.loginWithFacebook(this@Login, loginResult.accessToken, progressBar)
+                UserUtil.loginWithFacebook(this@LoginActivity, loginResult.accessToken, progressBar)
             }
 
             override fun onCancel() {
@@ -91,7 +91,7 @@ class Login : AppCompatActivity(), View.OnClickListener {
 
         if (UserUtil.isLogged()) {
             // ja esta logado, vai para a tela inicial ou selecionar fazenda
-            startActivity(Intent(this, SelecionarFazenda::class.java))
+            startActivity(Intent(this, SelecionarFazendaActivity::class.java))
             finish()
         }
     }
@@ -116,7 +116,7 @@ class Login : AppCompatActivity(), View.OnClickListener {
 
             R.id.btn_login_com_facebook -> progressBar.visibility = View.VISIBLE
 
-            R.id.btn_registrar -> startActivity(Intent(applicationContext, Register::class.java))
+            R.id.btn_registrar -> startActivity(Intent(applicationContext, RegistrarActivity::class.java))
 
             else -> {
             }

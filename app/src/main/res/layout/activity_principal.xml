@@ -47,7 +47,7 @@
     <!-- barra lateral de navegacao -->
     <fragment
         android:id="@+id/fragment_navigation_drawer"
-        android:name="br.com.nutrisolver.tools.SideBar"
+        android:name="br.com.nutrisolver.fragments.SideBarFragment"
         android:layout_width="280dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"

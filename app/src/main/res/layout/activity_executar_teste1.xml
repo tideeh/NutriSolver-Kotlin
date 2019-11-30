@@ -96,7 +96,7 @@
                     <Button
                         android:id="@+id/btn_ligar"
                         style="@style/botao_confirmar"
-                        android:onClick="btn_ligar_teste"
+                        android:onClick="btnLigarTeste"
                         android:text="Executar" />
 
                     <EditText

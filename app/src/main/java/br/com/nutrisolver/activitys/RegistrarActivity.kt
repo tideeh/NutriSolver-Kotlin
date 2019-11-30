@@ -8,10 +8,10 @@ import android.widget.EditText
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import br.com.nutrisolver.R
-import br.com.nutrisolver.tools.UserUtil
-import br.com.nutrisolver.tools.UserUtil.isLogged
+import br.com.nutrisolver.utils.UserUtil
+import br.com.nutrisolver.utils.UserUtil.isLogged
 
-class Register : AppCompatActivity() {
+class RegistrarActivity : AppCompatActivity() {
     private lateinit var input_email: EditText
     private lateinit var input_senha: EditText
     private lateinit var input_senha_repetir: EditText
@@ -31,7 +31,7 @@ class Register : AppCompatActivity() {
         super.onStart()
 
         if (isLogged()) {
-            startActivity(Intent(this, SelecionarFazenda::class.java))
+            startActivity(Intent(this, SelecionarFazendaActivity::class.java))
             finish()
         }
     }

@@ -1,4 +1,4 @@
-package br.com.nutrisolver.objects
+package br.com.nutrisolver.models
 
 import android.os.Parcel
 import android.os.Parcelable

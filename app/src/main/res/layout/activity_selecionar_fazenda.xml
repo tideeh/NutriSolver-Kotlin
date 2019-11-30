@@ -30,7 +30,7 @@
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_cadastrar_fazenda"
         style="@style/floating_button_add"
-        android:onClick="cadastrar_fazenda" />
+        android:onClick="cadastrarFazenda" />
 
     <ProgressBar
         style="@style/my_progress_bar"

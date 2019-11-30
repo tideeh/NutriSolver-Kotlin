@@ -1,4 +1,4 @@
-package br.com.nutrisolver.objects
+package br.com.nutrisolver.models
 
 import java.sql.Timestamp
 import java.text.SimpleDateFormat

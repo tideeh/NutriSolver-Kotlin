@@ -1,22 +1,22 @@
-package br.com.nutrisolver.activitys
+package br.com.nutrisolver.fragments
 
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.TextView
 import br.com.nutrisolver.R
-import br.com.nutrisolver.objects.Dieta
+import br.com.nutrisolver.activitys.ExecutarTeste1Activity
+import br.com.nutrisolver.activitys.PrincipalActivity
 
 /**
  * A simple [Fragment] subclass.
  */
-class TestesFragment : Fragment(), Principal.DataFromActivityToFragment {
+class TestesFragment : Fragment(),
+    PrincipalActivity.DataFromActivityToFragment {
     lateinit var my_view: View
 
     override fun onCreateView(
@@ -33,7 +33,7 @@ class TestesFragment : Fragment(), Principal.DataFromActivityToFragment {
         this.my_view = view
 
         view.findViewById<Button>(R.id.btn_executar_teste).setOnClickListener {
-            val ite = Intent(activity, ExecutarTeste1::class.java)
+            val ite = Intent(activity, ExecutarTeste1Activity::class.java)
             startActivity(ite)
         }
     }

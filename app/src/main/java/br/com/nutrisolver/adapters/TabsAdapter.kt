@@ -1,4 +1,4 @@
-package br.com.nutrisolver.tools
+package br.com.nutrisolver.adapters
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager

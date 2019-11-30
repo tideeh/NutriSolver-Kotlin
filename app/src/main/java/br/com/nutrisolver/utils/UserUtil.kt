@@ -1,4 +1,4 @@
-package br.com.nutrisolver.tools
+package br.com.nutrisolver.utils
 
 import android.content.Intent
 import android.text.TextUtils
@@ -6,8 +6,8 @@ import android.view.View
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import br.com.nutrisolver.activitys.SelecionarFazenda
-import br.com.nutrisolver.tools.ToastUtil.show
+import br.com.nutrisolver.activitys.SelecionarFazendaActivity
+import br.com.nutrisolver.utils.ToastUtil.show
 import com.facebook.AccessToken
 import com.facebook.login.LoginManager
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -35,7 +35,7 @@ object UserUtil {
             ) { task ->
                 if (task.isSuccessful) {
                     // login realizado com sucesso, vai para tela inicial ou selecionar fazenda
-                    ctx.startActivity(Intent(ctx, SelecionarFazenda::class.java))
+                    ctx.startActivity(Intent(ctx, SelecionarFazendaActivity::class.java))
                     ctx.finish()
                 } else {
                     ToastUtil.show(
@@ -66,7 +66,7 @@ object UserUtil {
         ) { task ->
             if (task.isSuccessful) {
                 // login realizado com sucesso, vai para a tela selecionar fazenda
-                ctx.startActivity(Intent(ctx, SelecionarFazenda::class.java))
+                ctx.startActivity(Intent(ctx, SelecionarFazendaActivity::class.java))
                 ctx.finish()
             } else {
                 ToastUtil.show(ctx, "Autenticação falhou: " + task.exception!!, Toast.LENGTH_SHORT)
@@ -90,7 +90,7 @@ object UserUtil {
             ) { task ->
                 if (task.isSuccessful) {
                     // login realizado com sucesso, vai para tela inicial ou selecionar fazenda
-                    ctx.startActivity(Intent(ctx, SelecionarFazenda::class.java))
+                    ctx.startActivity(Intent(ctx, SelecionarFazendaActivity::class.java))
                     ctx.finish()
                 } else {
                     ToastUtil.show(
@@ -116,7 +116,7 @@ object UserUtil {
                 ctx
             ) { task ->
                 if (task.isSuccessful) { // registrado com sucesso, vai para a tela selecionar fazenda
-                    ctx.startActivity(Intent(ctx, SelecionarFazenda::class.java))
+                    ctx.startActivity(Intent(ctx, SelecionarFazendaActivity::class.java))
                     ctx.finish()
                 } else { // registro falhou
                     show(
