@@ -148,6 +148,7 @@ class ListarDispositivosBTActivity : AppCompatActivity() {
 //findViewById(R.id.title_new_devices).setVisibility(View.VISIBLE);
 // If we're already discovering, stop it
         if (bluetoothAdapter != null) {
+            if ((bluetoothAdapter as BluetoothAdapter).isDiscovering)
                 (bluetoothAdapter as BluetoothAdapter).cancelDiscovery()
             // Request discover from BluetoothAdapter
             NewDevicesArrayAdapter.clear()
