@@ -12,6 +12,8 @@ import br.com.nutrisolver.BuildConfig
 import br.com.nutrisolver.R
 import br.com.nutrisolver.models.Fazenda
 import br.com.nutrisolver.utils.DataBaseUtil
+import br.com.nutrisolver.utils.SP_KEY_FAZENDA_CORRENTE_NOME
+import br.com.nutrisolver.utils.SP_NOME
 import br.com.nutrisolver.utils.UserUtil
 import com.crashlytics.android.Crashlytics
 import io.fabric.sdk.android.Fabric
@@ -26,7 +28,7 @@ class SplashScreenActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash_screen)
 
-        sharedpreferences = getSharedPreferences("MyPref", Context.MODE_PRIVATE)
+        sharedpreferences = getSharedPreferences(SP_NOME, Context.MODE_PRIVATE)
 
         Fabric.with(this, Crashlytics())
 
@@ -60,7 +62,7 @@ class SplashScreenActivity : AppCompatActivity() {
                                 if (fazenda.dono_uid == UserUtil.getCurrentUser()?.uid) {
                                     val editor = sharedpreferences.edit()
                                     editor.putString("fazenda_corrente_id", fazenda.id)
-                                    editor.putString("fazenda_corrente_nome", fazenda.nome)
+                                    editor.putString(SP_KEY_FAZENDA_CORRENTE_NOME, fazenda.nome)
                                     editor.apply()
 
                                     startActivity(Intent(applicationContext, PrincipalActivity::class.java))

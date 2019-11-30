@@ -20,6 +20,7 @@ import br.com.nutrisolver.activitys.VisualizarLoteActivity
 import br.com.nutrisolver.models.Lote
 import br.com.nutrisolver.adapters.AdapterLote
 import br.com.nutrisolver.utils.DataBaseUtil
+import br.com.nutrisolver.utils.SP_NOME
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.util.*
 
@@ -64,7 +65,7 @@ class LotesFragment : Fragment(),
             from_onSaveInstanceState = savedInstanceState.getBoolean("from_onSaveInstanceState")
         }
 
-        sharedpreferences = activity?.getSharedPreferences("MyPref", Context.MODE_PRIVATE)
+        sharedpreferences = activity?.getSharedPreferences(SP_NOME, Context.MODE_PRIVATE)
         fazenda_corrente_id = sharedpreferences?.getString("fazenda_corrente_id", "-1") ?: "-1"
         progressBar = view.findViewById(R.id.progress_bar)
 

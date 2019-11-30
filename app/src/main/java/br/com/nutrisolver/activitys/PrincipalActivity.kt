@@ -25,6 +25,7 @@ import br.com.nutrisolver.adapters.TabsAdapter
 import br.com.nutrisolver.fragments.DietasFragment
 import br.com.nutrisolver.fragments.LotesFragment
 import br.com.nutrisolver.fragments.TestesFragment
+import br.com.nutrisolver.utils.SP_NOME
 import br.com.nutrisolver.utils.UserUtil
 import com.google.android.material.tabs.TabLayout
 
@@ -58,7 +59,7 @@ class PrincipalActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_principal)
 
-        sharedpreferences = getSharedPreferences("MyPref", Context.MODE_PRIVATE)
+        sharedpreferences = getSharedPreferences(SP_NOME, Context.MODE_PRIVATE)
 
         first_select_ignored = false
 

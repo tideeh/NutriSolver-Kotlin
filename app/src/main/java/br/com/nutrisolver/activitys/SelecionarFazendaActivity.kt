@@ -17,6 +17,7 @@ import br.com.nutrisolver.R
 import br.com.nutrisolver.models.Fazenda
 import br.com.nutrisolver.adapters.AdapterFazenda
 import br.com.nutrisolver.utils.DataBaseUtil
+import br.com.nutrisolver.utils.SP_NOME
 import br.com.nutrisolver.utils.UserUtil
 
 class SelecionarFazendaActivity : AppCompatActivity() {
@@ -31,7 +32,7 @@ class SelecionarFazendaActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_selecionar_fazenda)
 
-        sharedpreferences = getSharedPreferences("MyPref", Context.MODE_PRIVATE)
+        sharedpreferences = getSharedPreferences(SP_NOME, Context.MODE_PRIVATE)
 
         progressBar = findViewById(R.id.progress_bar)
 

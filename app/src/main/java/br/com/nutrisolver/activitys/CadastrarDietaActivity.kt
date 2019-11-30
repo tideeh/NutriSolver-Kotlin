@@ -49,6 +49,7 @@ class CadastrarDietaActivity : AppCompatActivity() {
         sharedPreferences = getSharedPreferences(SP_NOME, Context.MODE_PRIVATE)
         fazendaCorrenteId = sharedPreferences.getString(SP_KEY_FAZENDA_CORRENTE_ID, DEFAULT_STRING_VALUE) ?: DEFAULT_STRING_VALUE
         fazendaCorrenteNome = sharedPreferences.getString(SP_KEY_FAZENDA_CORRENTE_NOME, DEFAULT_STRING_VALUE) ?: DEFAULT_STRING_VALUE
+        Log.i("MY_CONSTANTS", fazendaCorrenteNome+" "+SP_KEY_FAZENDA_CORRENTE_NOME)
         spinner = findViewById(R.id.spn_cadastrar_dieta)
         configuraListview()
         atualizaListaIngredientes()
