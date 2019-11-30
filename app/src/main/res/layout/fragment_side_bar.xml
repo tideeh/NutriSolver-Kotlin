@@ -54,7 +54,7 @@
             android:orientation="vertical">
 
             <LinearLayout
-                android:onClick="sidebar_testar_amostra"
+                android:onClick="sidebarButtonTestarAmostra"
                 android:id="@+id/navigation_executar_teste"
                 android:background="@drawable/ripple_efect_menu_lateral"
                 android:layout_width="match_parent"

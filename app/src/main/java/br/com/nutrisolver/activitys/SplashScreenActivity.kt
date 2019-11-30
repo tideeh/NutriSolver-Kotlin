@@ -5,37 +5,33 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import br.com.nutrisolver.BuildConfig
 import br.com.nutrisolver.R
 import br.com.nutrisolver.models.Fazenda
-import br.com.nutrisolver.utils.DataBaseUtil
-import br.com.nutrisolver.utils.SP_KEY_FAZENDA_CORRENTE_NOME
-import br.com.nutrisolver.utils.SP_NOME
-import br.com.nutrisolver.utils.UserUtil
+import br.com.nutrisolver.utils.*
 import com.crashlytics.android.Crashlytics
 import io.fabric.sdk.android.Fabric
 
 class SplashScreenActivity : AppCompatActivity() {
 
-    private lateinit var sharedpreferences : SharedPreferences
+    private lateinit var sharedPreferences : SharedPreferences
 
-    private var fazenda_corrente_id : String = ""
+    private var fazendaCorrenteId : String = DEFAULT_STRING_VALUE
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash_screen)
 
-        sharedpreferences = getSharedPreferences(SP_NOME, Context.MODE_PRIVATE)
+        sharedPreferences = getSharedPreferences(SP_NOME, Context.MODE_PRIVATE)
 
         Fabric.with(this, Crashlytics())
 
-        val versionCode = BuildConfig.VERSION_CODE
+        //val versionCode = BuildConfig.VERSION_CODE
         val versionName = BuildConfig.VERSION_NAME
-        Log.i("MY_VERSION_CONTROL", "versionCode: $versionCode")
-        Log.i("MY_VERSION_CONTROL", "versionName: $versionName")
+        //Log.i("MY_VERSION_CONTROL", "versionCode: $versionCode")
+        //Log.i("MY_VERSION_CONTROL", "versionName: $versionName")
 
         findViewById<TextView>(R.id.splash_version_name).text = versionName
 
@@ -50,18 +46,18 @@ class SplashScreenActivity : AppCompatActivity() {
             finish()
         }
         else{
-            fazenda_corrente_id = sharedpreferences.getString("fazenda_corrente_id", "-1") ?: "-1"
+            fazendaCorrenteId = sharedPreferences.getString(SP_KEY_FAZENDA_CORRENTE_ID, DEFAULT_STRING_VALUE) ?: DEFAULT_STRING_VALUE
 
-            DataBaseUtil.getDocument("fazendas", fazenda_corrente_id)
+            DataBaseUtil.getDocument(DB_COLLECTION_FAZENDAS, fazendaCorrenteId)
                 .addOnCompleteListener { task ->
                     if(task.isSuccessful){
                         val document = task.result
                         if(document != null){
                             val fazenda = document.toObject(Fazenda::class.java)
                             if(fazenda != null) {
-                                if (fazenda.dono_uid == UserUtil.getCurrentUser()?.uid) {
-                                    val editor = sharedpreferences.edit()
-                                    editor.putString("fazenda_corrente_id", fazenda.id)
+                                if (fazenda.donoUid == UserUtil.getCurrentUser()?.uid) {
+                                    val editor = sharedPreferences.edit()
+                                    editor.putString(SP_KEY_FAZENDA_CORRENTE_ID, fazenda.id)
                                     editor.putString(SP_KEY_FAZENDA_CORRENTE_NOME, fazenda.nome)
                                     editor.apply()
 

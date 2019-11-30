@@ -2,6 +2,7 @@ package br.com.nutrisolver.models
 
 import android.os.Parcel
 import android.os.Parcelable
+import br.com.nutrisolver.utils.DEFAULT_STRING_VALUE
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
 import java.util.*
@@ -9,37 +10,37 @@ import kotlin.collections.ArrayList
 
 class Dieta() : Parcelable {
     var id: String = UUID.randomUUID().toString()
-    var data_criacao: String =
+    var dataCriacao: String =
         SimpleDateFormat("dd/MM/yyyy HH.mm.ss").format(Timestamp(System.currentTimeMillis()))
 
-    var dono_uid: String = "-1"
-    var fazenda_id: String = "-1"
-    var lote_id: String = "-1"
-    var nome: String = ""
-    var isAtivo: Boolean = true
-    var ingredientes_nomes: ArrayList<String>? =
+    var donoUid: String = DEFAULT_STRING_VALUE
+    var fazendaId: String = DEFAULT_STRING_VALUE
+    var loteId: String = DEFAULT_STRING_VALUE
+    var nome: String = DEFAULT_STRING_VALUE
+    var ativo: Boolean = true
+    var ingredientesNomes: ArrayList<String>? =
         ArrayList() // tambem serve como DocumentReference pois o id do ingrediente eh o seu nome
 
     constructor(parcel: Parcel) : this() {
-        id = parcel.readString() ?: "-1"
-        data_criacao = parcel.readString() ?: "-1"
-        dono_uid = parcel.readString() ?: "-1"
-        fazenda_id = parcel.readString() ?: "-1"
-        lote_id = parcel.readString() ?: "-1"
-        nome = parcel.readString() ?: ""
-        isAtivo = parcel.readByte() != 0.toByte()
-        ingredientes_nomes = parcel.createStringArrayList()
+        id = parcel.readString() ?: DEFAULT_STRING_VALUE
+        dataCriacao = parcel.readString() ?: DEFAULT_STRING_VALUE
+        donoUid = parcel.readString() ?: DEFAULT_STRING_VALUE
+        fazendaId = parcel.readString() ?: DEFAULT_STRING_VALUE
+        loteId = parcel.readString() ?: DEFAULT_STRING_VALUE
+        nome = parcel.readString() ?: DEFAULT_STRING_VALUE
+        ativo = parcel.readByte() != 0.toByte()
+        ingredientesNomes = parcel.createStringArrayList()
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(id)
-        parcel.writeString(data_criacao)
-        parcel.writeString(dono_uid)
-        parcel.writeString(fazenda_id)
-        parcel.writeString(lote_id)
+        parcel.writeString(dataCriacao)
+        parcel.writeString(donoUid)
+        parcel.writeString(fazendaId)
+        parcel.writeString(loteId)
         parcel.writeString(nome)
-        parcel.writeByte(if (isAtivo) 1 else 0)
-        parcel.writeStringList(ingredientes_nomes)
+        parcel.writeByte(if (ativo) 1 else 0)
+        parcel.writeStringList(ingredientesNomes)
     }
 
     override fun describeContents(): Int {

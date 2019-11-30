@@ -10,14 +10,14 @@ import br.com.nutrisolver.models.Dieta
 import java.util.*
 
 class AdapterDieta(private val act: Activity?) : BaseAdapter() {
-    val list_items: ArrayList<Dieta> = ArrayList()
+    val listItems: ArrayList<Dieta> = ArrayList()
 
     override fun getCount(): Int {
-        return list_items.size
+        return listItems.size
     }
 
     override fun getItem(position: Int): Any {
-        return list_items[position]
+        return listItems[position]
     }
 
     override fun getItemId(position: Int): Long {
@@ -25,11 +25,11 @@ class AdapterDieta(private val act: Activity?) : BaseAdapter() {
     }
 
     fun getItemIdString(pos: Int): String {
-        return list_items[pos].id
+        return listItems[pos].id
     }
 
     fun getItemName(pos: Int): String {
-        return list_items[pos].nome
+        return listItems[pos].nome
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View? {
@@ -39,7 +39,7 @@ class AdapterDieta(private val act: Activity?) : BaseAdapter() {
 
         val view = act.layoutInflater.inflate(R.layout.lista_dieta_item, parent, false)
 
-        val dieta = list_items[position]
+        val dieta = listItems[position]
 
         val nome = view.findViewById(R.id.lista_dieta_titulo) as TextView
 
@@ -49,12 +49,12 @@ class AdapterDieta(private val act: Activity?) : BaseAdapter() {
     }
 
     fun addItem(item: Dieta) {
-        this.list_items.add(item)
+        this.listItems.add(item)
         this.notifyDataSetChanged()
     }
 
     fun clear() {
-        list_items.clear()
+        listItems.clear()
         this.notifyDataSetChanged()
     }
 }

@@ -27,7 +27,6 @@ import java.io.OutputStream
 import java.util.*
 
 class ExecutarTeste1Activity : AppCompatActivity() {
-    val TOAST = "toast"
     private val BT_MODULE_UUID = UUID.fromString(BT_MODULE_UUID_STRING)
 
     val bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
@@ -101,7 +100,7 @@ class ExecutarTeste1Activity : AppCompatActivity() {
                     }
                     MESSAGE_WHAT_TOAST -> show(
                         this@ExecutarTeste1Activity,
-                        msg.data.getString(TOAST) ?: "-1",
+                        msg.data.getString(BUNDLE_KEY_TOAST) ?: DEFAULT_STRING_VALUE,
                         Toast.LENGTH_SHORT
                     )
                 }
@@ -428,8 +427,8 @@ class ExecutarTeste1Activity : AppCompatActivity() {
                         bluetoothIo!!.obtainMessage(MESSAGE_WHAT_TOAST)
                     val bundle = Bundle()
                     bundle.putString(
-                        "toast",
-                        "Couldn't send data to the other device"
+                        BUNDLE_KEY_TOAST,
+                        getString(R.string.falha_ao_enviar_para_o_outro_dispositivo)
                     )
                     writeErrorMsg.data = bundle
                     bluetoothIo!!.sendMessage(writeErrorMsg)

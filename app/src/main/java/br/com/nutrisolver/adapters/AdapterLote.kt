@@ -10,14 +10,14 @@ import br.com.nutrisolver.models.Lote
 import java.util.*
 
 class AdapterLote(private val act: Activity?) : BaseAdapter() {
-    val list_items: ArrayList<Lote> = ArrayList()
+    val listItems: ArrayList<Lote> = ArrayList()
 
     override fun getCount(): Int {
-        return list_items.size
+        return listItems.size
     }
 
     override fun getItem(position: Int): Any {
-        return list_items[position]
+        return listItems[position]
     }
 
     override fun getItemId(position: Int): Long {
@@ -25,11 +25,11 @@ class AdapterLote(private val act: Activity?) : BaseAdapter() {
     }
 
     fun getItemIdString(pos: Int): String {
-        return list_items[pos].id
+        return listItems[pos].id
     }
 
     fun getItemName(pos: Int): String {
-        return list_items[pos].nome
+        return listItems[pos].nome
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View? {
@@ -39,7 +39,7 @@ class AdapterLote(private val act: Activity?) : BaseAdapter() {
 
         val view = act.layoutInflater.inflate(R.layout.lista_lote_item, parent, false)
 
-        val lote = list_items[position]
+        val lote = listItems[position]
 
         val nome = view.findViewById(R.id.lista_lote_titulo) as TextView
 
@@ -49,12 +49,12 @@ class AdapterLote(private val act: Activity?) : BaseAdapter() {
     }
 
     fun addItem(item: Lote) {
-        this.list_items.add(item)
+        this.listItems.add(item)
         this.notifyDataSetChanged()
     }
 
     fun clear() {
-        list_items.clear()
+        listItems.clear()
         this.notifyDataSetChanged()
     }
 

@@ -17,7 +17,7 @@ import br.com.nutrisolver.activitys.PrincipalActivity
  */
 class TestesFragment : Fragment(),
     PrincipalActivity.DataFromActivityToFragment {
-    lateinit var my_view: View
+    private lateinit var myView: View
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -30,7 +30,7 @@ class TestesFragment : Fragment(),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        this.my_view = view
+        this.myView = view
 
         view.findViewById<Button>(R.id.btn_executar_teste).setOnClickListener {
             val ite = Intent(activity, ExecutarTeste1Activity::class.java)

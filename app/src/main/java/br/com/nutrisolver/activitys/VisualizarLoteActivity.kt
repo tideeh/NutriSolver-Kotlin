@@ -1,5 +1,6 @@
 package br.com.nutrisolver.activitys
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
@@ -13,14 +14,14 @@ import androidx.appcompat.widget.Toolbar
 import br.com.nutrisolver.R
 import br.com.nutrisolver.models.Dieta
 import br.com.nutrisolver.adapters.AdapterDieta
-import br.com.nutrisolver.utils.DataBaseUtil
+import br.com.nutrisolver.utils.*
 import br.com.nutrisolver.utils.UserUtil.isLogged
 
 class VisualizarLoteActivity : AppCompatActivity() {
-    private var lote_id: String = "-1"
-    private var lote_nome: String = "-1"
+    private var loteId: String = DEFAULT_STRING_VALUE
+    private var loteNome: String = DEFAULT_STRING_VALUE
     private lateinit var progressBar: ProgressBar
-    private lateinit var listView_dietas: ListView
+    private lateinit var listviewDietas: ListView
     private lateinit var adapterDieta: AdapterDieta
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,29 +31,30 @@ class VisualizarLoteActivity : AppCompatActivity() {
         progressBar = findViewById(R.id.progress_bar)
 
         val it = intent
-        lote_id = it.getStringExtra("lote_id") ?: "-1"
-        lote_nome = it.getStringExtra("lote_nome") ?: "-1"
+        loteId = it.getStringExtra(INTENT_KEY_LOTE_SELECIONADO_ID) ?: DEFAULT_STRING_VALUE
+        loteNome = it.getStringExtra(INTENT_KEY_LOTE_SELECIONADO_NOME) ?: DEFAULT_STRING_VALUE
 
-        if (lote_id.equals("-1") || lote_nome.equals("-1")) {
+        if (loteId == DEFAULT_STRING_VALUE || loteNome == DEFAULT_STRING_VALUE) {
             finish()
         }
 
         configura_listView()
-        atualiza_lista_dieta()
-        configura_toolbar()
+        atualizaListaDieta()
+        configuraToolbar()
+
         findViewById<View>(R.id.fab_cadastrar_dieta).setOnClickListener {
             val ite = Intent(this@VisualizarLoteActivity, CadastrarDietaActivity::class.java)
-            ite.putExtra("lote_selecionado_id", lote_id)
-            startActivityForResult(ite, CADASTRAR_DIETA_REQUEST)
+            ite.putExtra(INTENT_KEY_LOTE_SELECIONADO_ID, loteId)
+            startActivityForResult(ite, ACTIVITY_REQUEST_CADASTRAR_DIETA)
         }
     }
 
-    private fun atualiza_lista_dieta() {
+    private fun atualizaListaDieta() {
         progressBar.visibility = View.VISIBLE
         DataBaseUtil.getDocumentsWhereEqualTo(
-            "dietas",
-            arrayOf("lote_id", "ativo"),
-            arrayOf(lote_id, true)
+            DB_COLLECTION_DIETAS,
+            arrayOf(Dieta::loteId.name, Dieta::ativo.name),
+            arrayOf(loteId, true)
         )
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
@@ -77,14 +79,14 @@ class VisualizarLoteActivity : AppCompatActivity() {
             }
     }
 
-    private fun configura_toolbar() { // adiciona a barra de tarefas na tela
-        val my_toolbar =
+    private fun configuraToolbar() { // adiciona a barra de tarefas na tela
+        val myToolbar =
             findViewById<Toolbar>(R.id.my_toolbar_main)
-        setSupportActionBar(my_toolbar)
+        setSupportActionBar(myToolbar)
         // adiciona a seta de voltar na barra de tarefas
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = "Lote: $lote_nome"
+        supportActionBar?.title = getString(R.string.lote)+": $loteNome"
     }
 
     override fun onStart() {
@@ -112,22 +114,18 @@ class VisualizarLoteActivity : AppCompatActivity() {
         data: Intent?
     ) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == CADASTRAR_DIETA_REQUEST && resultCode == 1) { // foi cadastrada nova dieta, verifica se é desse lote, se for adiciona na lista
-            val d = data?.getParcelableExtra<Parcelable>("dieta_cadastrada") as Dieta
-            if (d.lote_id == lote_id) {
+        if (requestCode == ACTIVITY_REQUEST_CADASTRAR_DIETA && resultCode == Activity.RESULT_OK) { // foi cadastrada nova dieta, verifica se é desse lote, se for adiciona na lista
+            val d = data?.getParcelableExtra<Parcelable>(INTENT_KEY_DIETA_CADASTRADA) as Dieta
+            if (d.loteId == loteId) {
                 adapterDieta.addItem(d)
             }
         }
     }
 
     private fun configura_listView() {
-        listView_dietas =
+        listviewDietas =
             findViewById<View>(R.id.listView_dietas) as ListView
         adapterDieta = AdapterDieta(this)
-        listView_dietas.adapter = adapterDieta
-    }
-
-    companion object {
-        private const val CADASTRAR_DIETA_REQUEST = 1001
+        listviewDietas.adapter = adapterDieta
     }
 }

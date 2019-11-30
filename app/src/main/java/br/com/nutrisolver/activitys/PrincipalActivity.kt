@@ -20,68 +20,67 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.viewpager.widget.ViewPager
 import br.com.nutrisolver.R
 import br.com.nutrisolver.models.Fazenda
-import br.com.nutrisolver.utils.DataBaseUtil
 import br.com.nutrisolver.adapters.TabsAdapter
 import br.com.nutrisolver.fragments.DietasFragment
 import br.com.nutrisolver.fragments.LotesFragment
 import br.com.nutrisolver.fragments.TestesFragment
-import br.com.nutrisolver.utils.SP_NOME
-import br.com.nutrisolver.utils.UserUtil
+import br.com.nutrisolver.utils.*
 import com.google.android.material.tabs.TabLayout
 
 class PrincipalActivity : AppCompatActivity() {
-    internal lateinit var lotesFragment: LotesFragment
-    internal lateinit var dietasFragment: DietasFragment
-    internal lateinit var testesFragment: TestesFragment
+    private lateinit var lotesFragment: LotesFragment
+    private lateinit var dietasFragment: DietasFragment
+    private lateinit var testesFragment: TestesFragment
 
-    private var first_select_ignored: Boolean = false
+    private var firstSelectIgnored: Boolean = false
 
     private val tabIcons =
         intArrayOf(R.drawable.tab_lotes2, R.drawable.tab_dietas2, R.drawable.tab_testes2)
 
-    private val tabTexts = arrayOf("LOTES", "DIETAS", "TESTES")
+    private lateinit var sharedPreferences: SharedPreferences
 
-    private lateinit var sharedpreferences: SharedPreferences
+    private var fazendaCorrenteId: String = DEFAULT_STRING_VALUE
+    private var fazendaCorrenteNome: String = DEFAULT_STRING_VALUE
 
-    private var fazenda_corrente_id: String = "-1"
-    private var fazenda_corrente_nome: String = "-1"
     private lateinit var tabsAdapter: TabsAdapter
     private lateinit var tabLayout: TabLayout
     private lateinit var viewPager: ViewPager
 
     private lateinit var mDrawerLayout: DrawerLayout
     private lateinit var mDrawerToggle: ActionBarDrawerToggle
-    private var fazendas_nomes: ArrayList<String> = ArrayList()
-    private var fazendas_ids: ArrayList<String> = ArrayList()
+
+    private var listFazendasNomes: ArrayList<String> = ArrayList()
+    private var listFazendasIds: ArrayList<String> = ArrayList()
+
     private lateinit var spinner: Spinner
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_principal)
 
-        sharedpreferences = getSharedPreferences(SP_NOME, Context.MODE_PRIVATE)
+        sharedPreferences = getSharedPreferences(SP_NOME, Context.MODE_PRIVATE)
 
-        first_select_ignored = false
+        firstSelectIgnored = false
 
-        fazenda_corrente_id = sharedpreferences.getString("fazenda_corrente_id", "-1") ?: "-1"
-        fazenda_corrente_nome = sharedpreferences.getString("fazenda_corrente_nome", "-1") ?: "-1"
+        fazendaCorrenteId = sharedPreferences.getString(SP_KEY_FAZENDA_CORRENTE_ID, DEFAULT_STRING_VALUE) ?: DEFAULT_STRING_VALUE
+        fazendaCorrenteNome = sharedPreferences.getString(SP_KEY_FAZENDA_CORRENTE_NOME, DEFAULT_STRING_VALUE) ?: DEFAULT_STRING_VALUE
         spinner = findViewById(R.id.spn_fazendas)
 
-        configura_toolbar_com_nav_drawer()
+        configuraToolbarComNavDrawer()
 
         if (savedInstanceState != null) {
             // se ja foram criados, utiliza eles
             lotesFragment = supportFragmentManager.getFragment(
                 savedInstanceState,
-                "lotesFragment"
+                BUNDLE_KEY_LOTES_FRAGMENT
             ) as LotesFragment? ?: LotesFragment()
             dietasFragment = supportFragmentManager.getFragment(
                 savedInstanceState,
-                "dietasFragment"
+                BUNDLE_KEY_DIETAS_FRAGMENT
             ) as DietasFragment? ?: DietasFragment()
             testesFragment = supportFragmentManager.getFragment(
                 savedInstanceState,
-                "testesFragment"
+                BUNDLE_KEY_TESTES_FRAGMENT
             ) as TestesFragment? ?: TestesFragment()
         } else {
             lotesFragment = LotesFragment()
@@ -93,18 +92,18 @@ class PrincipalActivity : AppCompatActivity() {
         dataFromActivityToDietasFragment = dietasFragment
         dataFromActivityToTestesFragment = testesFragment
 
-        inicia_tab_fragments()
+        iniciaTabFragments()
 
-        configura_spinner_fazendas()
+        configuraSpinnerFazendas()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
 
         // salva os fragmentos
-        supportFragmentManager.putFragment(outState, "lotesFragment", lotesFragment)
-        supportFragmentManager.putFragment(outState, "dietasFragment", dietasFragment)
-        supportFragmentManager.putFragment(outState, "testesFragment", testesFragment)
+        supportFragmentManager.putFragment(outState, BUNDLE_KEY_LOTES_FRAGMENT, lotesFragment)
+        supportFragmentManager.putFragment(outState, BUNDLE_KEY_DIETAS_FRAGMENT, dietasFragment)
+        supportFragmentManager.putFragment(outState, BUNDLE_KEY_TESTES_FRAGMENT, testesFragment)
     }
 
     override fun onStart() {
@@ -120,15 +119,15 @@ class PrincipalActivity : AppCompatActivity() {
         mDrawerLayout.closeDrawers()
     }
 
-    private fun inicia_tab_fragments() {
+    private fun iniciaTabFragments() {
         tabsAdapter =
             TabsAdapter(supportFragmentManager, 3)
         viewPager = findViewById(R.id.view_pager)
         tabLayout = findViewById(R.id.tabLayout)
 
-        tabsAdapter.add(lotesFragment, "Lotes")
-        tabsAdapter.add(dietasFragment, "Dietas")
-        tabsAdapter.add(testesFragment, "Testes")
+        tabsAdapter.add(lotesFragment, getString(R.string.lotes))
+        tabsAdapter.add(dietasFragment, getString(R.string.dietas))
+        tabsAdapter.add(testesFragment, getString(R.string.testes))
         viewPager.adapter = tabsAdapter
         viewPager.offscreenPageLimit = 3
         tabLayout.setupWithViewPager(viewPager)
@@ -177,16 +176,16 @@ class PrincipalActivity : AppCompatActivity() {
 
     }
 
-    private fun configura_toolbar_com_nav_drawer() {
-        val my_toolbar = findViewById<Toolbar>(R.id.my_toolbar_main)
-        setSupportActionBar(my_toolbar)
+    private fun configuraToolbarComNavDrawer() {
+        val myToolbar = findViewById<Toolbar>(R.id.my_toolbar_main)
+        setSupportActionBar(myToolbar)
         supportActionBar?.setDisplayShowHomeEnabled(true)
         mDrawerLayout = findViewById(R.id.drawer_layout)
         mDrawerToggle = object :
             ActionBarDrawerToggle(
                 this,
                 mDrawerLayout,
-                my_toolbar,
+                myToolbar,
                 R.string.drawer_open,
                 R.string.drawer_close
             ) {
@@ -194,33 +193,34 @@ class PrincipalActivity : AppCompatActivity() {
         mDrawerLayout.addDrawerListener(mDrawerToggle)
         mDrawerLayout.post { mDrawerToggle.syncState() }
 
-        supportActionBar?.title = "Fazenda: " + fazenda_corrente_nome
+        supportActionBar?.title = getString(R.string.fazenda)+": $fazendaCorrenteNome"
     }
 
-    private fun configura_spinner_fazendas() {
-        fazendas_nomes = ArrayList()
-        fazendas_ids = ArrayList()
+    private fun configuraSpinnerFazendas() {
+        listFazendasNomes = ArrayList()
+        listFazendasIds = ArrayList()
 
+        Log.i("MY_MEMBER_NAME", Fazenda::donoUid.name)
         DataBaseUtil.getDocumentsWhereEqualTo(
-            "fazendas",
-            "dono_uid",
-            UserUtil.getCurrentUser()?.uid ?: "-1"
+            DB_COLLECTION_FAZENDAS,
+            Fazenda::donoUid.name,
+            UserUtil.getCurrentUser()?.uid ?: DEFAULT_STRING_VALUE
         )
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     val documents = task.result
                     if (documents != null) {
                         for (document in documents) {
-                            fazendas_nomes.add(document.toObject(Fazenda::class.java).nome)
-                            fazendas_ids.add(document.toObject(Fazenda::class.java).id)
+                            listFazendasNomes.add(document.toObject(Fazenda::class.java).nome)
+                            listFazendasIds.add(document.toObject(Fazenda::class.java).id)
                         }
 
-                        val opcoes = fazendas_nomes.toTypedArray()
-                        val spn_adapter =
+                        val opcoes = listFazendasNomes.toTypedArray()
+                        val spnAdapter =
                             ArrayAdapter(this@PrincipalActivity, R.layout.spinner_layout, opcoes)
-                        spinner.adapter = spn_adapter
+                        spinner.adapter = spnAdapter
 
-                        spinner.setSelection(fazendas_ids.indexOf(fazenda_corrente_id))
+                        spinner.setSelection(listFazendasIds.indexOf(fazendaCorrenteId))
 
                         spinner.onItemSelectedListener =
                             object : AdapterView.OnItemSelectedListener {
@@ -230,38 +230,38 @@ class PrincipalActivity : AppCompatActivity() {
                                     position: Int,
                                     id: Long
                                 ) {
-                                    if (first_select_ignored) {
+                                    if (firstSelectIgnored) {
 
-                                        val editor = sharedpreferences.edit()
+                                        val editor = sharedPreferences.edit()
                                         editor.putString(
-                                            "fazenda_corrente_id",
-                                            fazendas_ids[position]
+                                            SP_KEY_FAZENDA_CORRENTE_ID,
+                                            listFazendasIds[position]
                                         )
                                         editor.putString(
-                                            "fazenda_corrente_nome",
-                                            fazendas_nomes[position]
+                                            SP_KEY_FAZENDA_CORRENTE_NOME,
+                                            listFazendasNomes[position]
                                         )
                                         editor.apply()
                                         // fecha o navigation drawer
                                         mDrawerLayout = findViewById(R.id.drawer_layout)
                                         mDrawerLayout.closeDrawers()
 
-                                        fazenda_corrente_nome = fazendas_nomes[position]
-                                        fazenda_corrente_id = fazendas_ids[position]
+                                        fazendaCorrenteNome = listFazendasNomes[position]
+                                        fazendaCorrenteId = listFazendasIds[position]
 
                                         //envia_sinal_pros_fragments();
                                         dataFromActivityToLotesFragment.sendData(
-                                            "atualiza_lotes",
+                                            SEND_DATA_COMMAND_ATUALIZA_LOTES,
                                             null
                                         )
                                         dataFromActivityToDietasFragment.sendData(
-                                            "atualiza_dietas",
+                                            SEND_DATA_COMMAND_ATUALIZA_DIETAS,
                                             null
                                         )
 
-                                        supportActionBar?.title = "Fazenda: " + fazenda_corrente_nome
+                                        supportActionBar?.title = getString(R.string.fazenda)+": $fazendaCorrenteNome"
                                     }
-                                    first_select_ignored = true
+                                    firstSelectIgnored = true
                                 }
 
                                 override fun onNothingSelected(parent: AdapterView<*>) {
@@ -298,9 +298,9 @@ class PrincipalActivity : AppCompatActivity() {
     private fun logout() {
         UserUtil.logOut()
 
-        val editor = sharedpreferences.edit()
-        editor.remove("fazenda_corrente_id")
-        editor.remove("fazenda_corrente_nome")
+        val editor = sharedPreferences.edit()
+        editor.remove(SP_KEY_FAZENDA_CORRENTE_ID)
+        editor.remove(SP_KEY_FAZENDA_CORRENTE_NOME)
         editor.apply()
 
         startActivity(Intent(this, LoginActivity::class.java))
@@ -331,7 +331,7 @@ class PrincipalActivity : AppCompatActivity() {
         fun sendData(data: String, `object`: Any?)
     }
 
-    fun sidebar_testar_amostra(v: View) {
+    fun sidebarButtonTestarAmostra(v: View) {
         startActivity(Intent(this, ExecutarTeste1Activity::class.java))
     }
 
@@ -342,15 +342,15 @@ class PrincipalActivity : AppCompatActivity() {
 
         fun sendData(fragment: String, data: String, `object`: Any) {
             when (fragment) {
-                "DietasFragment" -> {
+                SEND_DATA_FRAGMENT_DIETAS -> {
                     dataFromActivityToDietasFragment.sendData(data, `object`)
                 }
 
-                "LotesFragment" -> {
+                SEND_DATA_FRAGMENT_LOTES -> {
                     dataFromActivityToLotesFragment.sendData(data, `object`)
                 }
 
-                "TestesFragment" -> {
+                SEND_DATA_FRAGMENT_TESTES -> {
                     dataFromActivityToTestesFragment.sendData(data, `object`)
                 }
 

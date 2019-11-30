@@ -67,4 +67,11 @@
     <string name="status_desconectado">Status: desconectado</string>
     <string name="status_conectado">Status: conectado</string>
     <string name="fluxo_entrada_interrompido">Fluxo de entrada interrompido</string>
+    <string name="falha_ao_enviar_para_o_outro_dispositivo">Falha ao enviar para o outro dispositivo</string>
+    <string name="permissao_necessaria_utilizar_funcionalidade">Permissão necessária para utilizar esta funcionalidade</string>
+    <string name="testes">Testes</string>
+    <string name="necessario_pelo_menos_6_caracteres">Necessário pelo menos 6 caracteres.</string>
+    <string name="senhas_diferentes">Senhas diferentes.</string>
+    <string name="lote">Lote</string>
+    <string name="campos_email_senha_nao_podem_ser_vazios">Os campos Email e Senha não podem ser vazios!</string>
 </resources>

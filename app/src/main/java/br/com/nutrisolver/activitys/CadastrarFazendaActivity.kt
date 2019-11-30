@@ -1,5 +1,6 @@
 package br.com.nutrisolver.activitys
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -63,7 +64,7 @@ class CadastrarFazendaActivity : AppCompatActivity() {
         val nomeFazenda = editTextNomeFazenda.text.toString()
         fazenda = Fazenda()
         fazenda.nome = nomeFazenda
-        fazenda.dono_uid = getCurrentUser()?.uid ?: DEFAULT_STRING_VALUE
+        fazenda.donoUid = getCurrentUser()?.uid ?: DEFAULT_STRING_VALUE
 
         DataBaseUtil.insertDocument(DB_COLLECTION_FAZENDAS, fazenda.id, fazenda)
 
@@ -84,7 +85,7 @@ class CadastrarFazendaActivity : AppCompatActivity() {
         )
         progressBar.visibility = View.GONE
         val it = Intent()
-        setResult(1, it)
+        setResult(Activity.RESULT_OK, it)
         finish()
     }
 

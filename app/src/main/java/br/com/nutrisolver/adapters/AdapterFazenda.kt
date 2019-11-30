@@ -10,14 +10,14 @@ import br.com.nutrisolver.R
 import br.com.nutrisolver.models.Fazenda
 
 class AdapterFazenda(private val act: Activity) : BaseAdapter() {
-    private val list_items: MutableList<Fazenda> = mutableListOf()
+    private val listItems: MutableList<Fazenda> = mutableListOf()
 
     override fun getCount(): Int {
-        return list_items.size
+        return listItems.size
     }
 
     override fun getItem(position: Int): Any {
-        return list_items[position]
+        return listItems[position]
     }
 
     override fun getItemId(position: Int): Long {
@@ -25,18 +25,18 @@ class AdapterFazenda(private val act: Activity) : BaseAdapter() {
     }
 
     fun getItemIdString(pos: Int): String {
-        return list_items[pos].id
+        return listItems[pos].id
     }
 
     fun getItemName(pos: Int): String {
-        return list_items[pos].nome
+        return listItems[pos].nome
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         Log.i("MY_FAZENDA_ADAPTER", "getView: $position")
         val view = act.layoutInflater.inflate(R.layout.lista_fazenda_item, parent, false)
 
-        val item = list_items[position]
+        val item = listItems[position]
 
         val nome = view.findViewById(R.id.lista_fazenda_titulo) as TextView
 
@@ -48,13 +48,13 @@ class AdapterFazenda(private val act: Activity) : BaseAdapter() {
     }
 
     fun addItem(item: Fazenda) {
-        this.list_items.add(item)
+        this.listItems.add(item)
         this.notifyDataSetChanged()
-        Log.i("MY_FAZENDA_ADAPTER", "list size: ${list_items.size}")
+        Log.i("MY_FAZENDA_ADAPTER", "list size: ${listItems.size}")
     }
 
     fun clear() {
-        list_items.clear()
+        listItems.clear()
         this.notifyDataSetChanged()
     }
 }

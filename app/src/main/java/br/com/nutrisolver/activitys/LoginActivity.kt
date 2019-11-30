@@ -1,11 +1,14 @@
 package br.com.nutrisolver.activitys
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import br.com.nutrisolver.R
+import br.com.nutrisolver.utils.ACTIVITY_REQUEST_LOGIN_COM_GOOGLE
+import br.com.nutrisolver.utils.ACTIVITY_REQUEST_REGISTRAR
 import br.com.nutrisolver.utils.ToastUtil
 import br.com.nutrisolver.utils.UserUtil
 import com.facebook.CallbackManager
@@ -20,15 +23,14 @@ import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.ApiException
 
 class LoginActivity : AppCompatActivity(), View.OnClickListener {
-    private val RC_SIGN_IN_GOOGLE = 9001
 
     private lateinit var progressBar: ProgressBar
-    private lateinit var bt_login_com_google: SignInButton
-    private lateinit var bt_login_com_senha: Button
-    private lateinit var bt_login_com_facebook: LoginButton
-    private lateinit var bt_registrar: TextView
-    private lateinit var input_email: EditText
-    private lateinit var input_senha: EditText
+    private lateinit var buttonLoginComGoogle: SignInButton
+    private lateinit var buttonLoginComSenha: Button
+    private lateinit var buttonLoginComFacebook: LoginButton
+    private lateinit var buttonRegistrar: TextView
+    private lateinit var editTextInputEmail: EditText
+    private lateinit var editTextInputSenha: EditText
 
     private lateinit var mGoogleSignInClient: GoogleSignInClient
     private lateinit var mCallbackManager: CallbackManager
@@ -47,10 +49,10 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
         // Configura Facebook Login
         mCallbackManager = CallbackManager.Factory.create()
-        bt_login_com_facebook = findViewById(R.id.btn_login_com_facebook)
-        bt_login_com_facebook.setPermissions("email", "public_profile")
-        bt_login_com_facebook.setOnClickListener(this)
-        bt_login_com_facebook.registerCallback(mCallbackManager, object :
+        buttonLoginComFacebook = findViewById(R.id.btn_login_com_facebook)
+        buttonLoginComFacebook.setPermissions("email", "public_profile")
+        buttonLoginComFacebook.setOnClickListener(this)
+        buttonLoginComFacebook.registerCallback(mCallbackManager, object :
             FacebookCallback<LoginResult> {
             override fun onSuccess(loginResult: LoginResult) {
                 // sucesso, agora autentica com o firebase
@@ -72,18 +74,18 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         // Build a GoogleSignInClient with the options specified by gso.
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
 
-        input_email = findViewById(R.id.login_input_email)
-        input_senha = findViewById(R.id.login_input_senha)
+        editTextInputEmail = findViewById(R.id.login_input_email)
+        editTextInputSenha = findViewById(R.id.login_input_senha)
 
-        bt_login_com_google = findViewById(R.id.btn_login_com_google)
-        setGooglePlusButtonText(bt_login_com_google, getString(R.string.fazer_login_com_google))
-        bt_login_com_google.setOnClickListener(this)
+        buttonLoginComGoogle = findViewById(R.id.btn_login_com_google)
+        setGooglePlusButtonText(buttonLoginComGoogle, getString(R.string.fazer_login_com_google))
+        buttonLoginComGoogle.setOnClickListener(this)
 
-        bt_login_com_senha = findViewById(R.id.btn_login_com_senha)
-        bt_login_com_senha.setOnClickListener(this)
+        buttonLoginComSenha = findViewById(R.id.btn_login_com_senha)
+        buttonLoginComSenha.setOnClickListener(this)
 
-        bt_registrar = findViewById(R.id.btn_registrar)
-        bt_registrar.setOnClickListener(this)
+        buttonRegistrar = findViewById(R.id.btn_registrar)
+        buttonRegistrar.setOnClickListener(this)
     }
 
     override fun onStart() {
@@ -101,8 +103,8 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
             R.id.btn_login_com_senha -> {
                 // login com email e senha
-                val email = input_email.text.toString()
-                val senha = input_senha.text.toString()
+                val email = editTextInputEmail.text.toString()
+                val senha = editTextInputSenha.text.toString()
 
                 UserUtil.loginWithEmailAndPassword(this, email, senha, progressBar)
             }
@@ -111,12 +113,12 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                 // login com Google
                 progressBar.visibility = View.VISIBLE
                 val signInIntent = mGoogleSignInClient.signInIntent
-                startActivityForResult(signInIntent, RC_SIGN_IN_GOOGLE)
+                startActivityForResult(signInIntent, ACTIVITY_REQUEST_LOGIN_COM_GOOGLE)
             }
 
             R.id.btn_login_com_facebook -> progressBar.visibility = View.VISIBLE
 
-            R.id.btn_registrar -> startActivity(Intent(applicationContext, RegistrarActivity::class.java))
+            R.id.btn_registrar -> startActivityForResult(Intent(applicationContext, RegistrarActivity::class.java), ACTIVITY_REQUEST_REGISTRAR)
 
             else -> {
             }
@@ -131,7 +133,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         mCallbackManager.onActivityResult(requestCode, resultCode, data)
 
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
-        if (requestCode == RC_SIGN_IN_GOOGLE) { // resposta do login com Google
+        if (requestCode == ACTIVITY_REQUEST_LOGIN_COM_GOOGLE) { // resposta do login com Google
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             try {
                 // Google Sign In was successful, authenticate with Firebase
@@ -146,9 +148,15 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
             }
 
         }
+
+        if(requestCode == ACTIVITY_REQUEST_REGISTRAR){
+            if(resultCode == Activity.RESULT_OK){
+                startActivity(Intent(this, SelecionarFazendaActivity::class.java))
+            }
+        }
     }
 
-    protected fun setGooglePlusButtonText(signInButton: SignInButton, buttonText: String) {
+    private fun setGooglePlusButtonText(signInButton: SignInButton, buttonText: String) {
         // Find the TextView that is inside of the SignInButton and set its text
         for (i in 0 until signInButton.childCount) {
             val v = signInButton.getChildAt(i)

@@ -12,18 +12,18 @@ import br.com.nutrisolver.utils.UserUtil
 import br.com.nutrisolver.utils.UserUtil.isLogged
 
 class RegistrarActivity : AppCompatActivity() {
-    private lateinit var input_email: EditText
-    private lateinit var input_senha: EditText
-    private lateinit var input_senha_repetir: EditText
+    private lateinit var editTextInputEmail: EditText
+    private lateinit var editTextInputSenha: EditText
+    private lateinit var editTextInputSenhaRepetir: EditText
     private lateinit var progressBar: ProgressBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
 
-        input_email = findViewById(R.id.register_input_email)
-        input_senha = findViewById(R.id.register_input_senha)
-        input_senha_repetir = findViewById(R.id.register_input_senha_repetir)
+        editTextInputEmail = findViewById(R.id.register_input_email)
+        editTextInputSenha = findViewById(R.id.register_input_senha)
+        editTextInputSenhaRepetir = findViewById(R.id.register_input_senha_repetir)
         progressBar = findViewById(R.id.progress_bar)
     }
 
@@ -40,37 +40,41 @@ class RegistrarActivity : AppCompatActivity() {
         if (!validaDados()) {
             return
         }
-        val email = input_email.text.toString()
-        val senha = input_senha.text.toString()
+
+        val email = editTextInputEmail.text.toString()
+        val senha = editTextInputSenha.text.toString()
         UserUtil.createUserWithEmailAndPassword(this, email, senha, progressBar)
     }
 
     private fun validaDados(): Boolean {
         var valido = true
-        val email = input_email.text.toString()
+
+        val email = editTextInputEmail.text.toString()
+        val senha = editTextInputSenha.text.toString()
+        val senhaRepetir = editTextInputSenhaRepetir.text.toString()
+
+        editTextInputEmail.error = null
+        editTextInputSenha.error = null
+        editTextInputSenhaRepetir.error = null
+
         if (TextUtils.isEmpty(email)) {
-            input_email.error = "Campo necessário."
+            editTextInputEmail.error = getString(R.string.campo_necessario)
             valido = false
-        } else {
-            input_email.error = null
         }
-        val senha = input_senha.text.toString()
+
         if (TextUtils.isEmpty(senha)) {
-            input_senha.error = "Campo necessário."
+            editTextInputSenha.error = getString(R.string.campo_necessario)
             valido = false
-        } else if (senha.length < 6) {
-            input_senha.error = "Necessário pelo menos 6 caracteres."
-            valido = false
-        } else {
-            input_senha.error = null
         }
-        val senhaRepetir = input_senha_repetir.text.toString()
-        if (senha != senhaRepetir) {
-            input_senha_repetir.error = "Senhas diferentes."
+        else if (senha.length < 6) {
+            editTextInputSenha.error = getString(R.string.necessario_pelo_menos_6_caracteres)
             valido = false
-        } else {
-            input_senha_repetir.error = null
         }
+        else if (senha != senhaRepetir) {
+            editTextInputSenhaRepetir.error = getString(R.string.senhas_diferentes)
+            valido = false
+        }
+
         return valido
     }
 }

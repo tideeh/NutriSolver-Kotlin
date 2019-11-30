@@ -7,7 +7,7 @@ apply plugin: 'com.google.firebase.firebase-perf'
 // aqui configura o version code e o version name
 ext.versionMajor = 1 // altera quando tem um grande releas
 ext.versionMinor = 1 // altera quando tem um release medio (volta pra 0 quando altera o Major)
-ext.versionPatch = 0 // altera em qualquer release (volta pra 0 quando altera o Minor)
+ext.versionPatch = 1 // altera em qualquer release (volta pra 0 quando altera o Minor)
 ext.versionClassifier = "ALFA" // nome da versao (null) para desativar
 //ext.isBeta = true
 ext.minimumSdkVersion = 21 // altera quando precisar aumentar o min SDK version (novas apis)
@@ -15,8 +15,8 @@ ext.minimumSdkVersion = 21 // altera quando precisar aumentar o min SDK version 
 android {
     signingConfigs {
         release {
-            //storeFile file('C:\\Users\\tideeh\\Google Drive\\NutriSolver\\app\\app key\\nutrisolver.jks')//PC
-            storeFile file('C:\\Users\\tidee\\Google Drive\\NutriSolver\\app\\app key\\nutrisolver.jks')//notebook
+            storeFile file('C:\\Users\\tideeh\\Google Drive\\NutriSolver\\app\\app key\\nutrisolver.jks')//PC
+            //storeFile file('C:\\Users\\tidee\\Google Drive\\NutriSolver\\app\\app key\\nutrisolver.jks')//notebook
             storePassword 'AAbb1122'
             keyAlias = 'nutrisolver'
             keyPassword 'AAbb1122'

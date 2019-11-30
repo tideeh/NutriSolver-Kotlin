@@ -19,23 +19,22 @@ import br.com.nutrisolver.activitys.PrincipalActivity
 import br.com.nutrisolver.activitys.VisualizarLoteActivity
 import br.com.nutrisolver.models.Lote
 import br.com.nutrisolver.adapters.AdapterLote
-import br.com.nutrisolver.utils.DataBaseUtil
-import br.com.nutrisolver.utils.SP_NOME
+import br.com.nutrisolver.utils.*
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.util.*
 
 class LotesFragment : Fragment(),
     PrincipalActivity.DataFromActivityToFragment {
 
-    lateinit var my_view: View
-    private lateinit var listView_lotes: ListView
+    private lateinit var myView: View
+    private lateinit var listviewLotes: ListView
     private lateinit var adapterLote: AdapterLote
-    private var lista_lotes: ArrayList<Lote> = ArrayList()
+    private var listlotes: ArrayList<Lote> = ArrayList()
 
-    private var sharedpreferences: SharedPreferences? = null
-    private var fazenda_corrente_id: String = "-1"
+    private var sharedPreferences: SharedPreferences? = null
+    private var fazendaCorrenteId: String = DEFAULT_STRING_VALUE
     private lateinit var progressBar: ProgressBar
-    private var from_onSaveInstanceState = false
+    private var fromOnSaveInstanceState = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,22 +54,27 @@ class LotesFragment : Fragment(),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        this.my_view = view
+        this.myView = view
 
-        from_onSaveInstanceState = false
-        lista_lotes = ArrayList()
+        fromOnSaveInstanceState = false
+        listlotes = ArrayList()
         if (savedInstanceState != null) {
-            lista_lotes =
-                savedInstanceState.getParcelableArrayList<Lote>("lista_lotes") ?: ArrayList()
-            from_onSaveInstanceState = savedInstanceState.getBoolean("from_onSaveInstanceState")
+            listlotes =
+                savedInstanceState.getParcelableArrayList<Lote>(BUNDLE_KEY_LISTA_LOTES)
+                    ?: ArrayList()
+            fromOnSaveInstanceState = savedInstanceState.getBoolean(
+                BUNDLE_KEY_FROM_ON_SAVE_INSTANCE_STATE_LOTES
+            )
         }
 
-        sharedpreferences = activity?.getSharedPreferences(SP_NOME, Context.MODE_PRIVATE)
-        fazenda_corrente_id = sharedpreferences?.getString("fazenda_corrente_id", "-1") ?: "-1"
+        sharedPreferences = activity?.getSharedPreferences(SP_NOME, Context.MODE_PRIVATE)
+        fazendaCorrenteId =
+            sharedPreferences?.getString(SP_KEY_FAZENDA_CORRENTE_ID, DEFAULT_STRING_VALUE)
+                ?: DEFAULT_STRING_VALUE
         progressBar = view.findViewById(R.id.progress_bar)
 
-        configura_listView()
-        atualiza_lista_de_lotes()
+        configuraListview()
+        atualizaListaDeLotes()
 
         view.findViewById<FloatingActionButton>(R.id.fab_cadastrar_lote).setOnClickListener {
             val ite = Intent(activity, CadastrarLoteActivity::class.java)
@@ -81,23 +85,27 @@ class LotesFragment : Fragment(),
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
 
-        outState.putParcelableArrayList("lista_lotes", adapterLote.list_items)
-        outState.putBoolean("from_onSaveInstanceState", true)
+        outState.putParcelableArrayList(BUNDLE_KEY_LISTA_LOTES, adapterLote.listItems)
+        outState.putBoolean(BUNDLE_KEY_FROM_ON_SAVE_INSTANCE_STATE_LOTES, true)
     }
 
-    private fun atualiza_lista_de_lotes() {
+    private fun atualizaListaDeLotes() {
         progressBar.visibility = View.VISIBLE
 
         adapterLote.clear()
-        if (from_onSaveInstanceState) {
-            from_onSaveInstanceState = false
+        if (fromOnSaveInstanceState) {
+            fromOnSaveInstanceState = false
             Log.i("MY_SAVED", "lotes vieram do saved!")
-            for (lote in lista_lotes) {
+            for (lote in listlotes) {
                 adapterLote.addItem(lote)
             }
             progressBar.visibility = View.GONE
         } else {
-            DataBaseUtil.getDocumentsWhereEqualTo("lotes", "fazenda_id", fazenda_corrente_id)
+            DataBaseUtil.getDocumentsWhereEqualTo(
+                DB_COLLECTION_LOTES,
+                arrayOf(Lote::fazendaId.name, Lote::ativo.name),
+                arrayOf(fazendaCorrenteId, true)
+            )
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         val documents = task.result
@@ -133,29 +141,30 @@ class LotesFragment : Fragment(),
 
  */
 
-    private fun configura_listView() {
-        listView_lotes = my_view.findViewById(R.id.lista_lotes) as ListView
+    private fun configuraListview() {
+        listviewLotes = myView.findViewById(R.id.lista_lotes) as ListView
         adapterLote = AdapterLote(activity)
-        listView_lotes.adapter = adapterLote
-        listView_lotes.onItemClickListener =
+        listviewLotes.adapter = adapterLote
+        listviewLotes.onItemClickListener =
             AdapterView.OnItemClickListener { parent, view, position, id ->
                 val it = Intent(view.context, VisualizarLoteActivity::class.java)
-                it.putExtra("lote_id", adapterLote.getItemIdString(position))
-                it.putExtra("lote_nome", adapterLote.getItemName(position))
+                it.putExtra(INTENT_KEY_LOTE_SELECIONADO_ID, adapterLote.getItemIdString(position))
+                it.putExtra(INTENT_KEY_LOTE_SELECIONADO_NOME, adapterLote.getItemName(position))
                 startActivity(it)
             }
     }
 
     override fun sendData(data: String, `object`: Any?) {
         when (data) {
-            "atualiza_lotes" -> {
+            SEND_DATA_COMMAND_ATUALIZA_LOTES -> {
                 Log.i("MY_SENDDATA", "atualiza_lotes")
-                fazenda_corrente_id =
-                    sharedpreferences?.getString("fazenda_corrente_id", "-1") ?: "-1"
-                atualiza_lista_de_lotes()
+                fazendaCorrenteId =
+                    sharedPreferences?.getString(SP_KEY_FAZENDA_CORRENTE_ID, DEFAULT_STRING_VALUE)
+                        ?: DEFAULT_STRING_VALUE
+                atualizaListaDeLotes()
             }
 
-            "adiciona_lote" -> {
+            SEND_DATA_COMMAND_ADICIONA_LOTE -> {
                 adapterLote.addItem(`object` as Lote)
             }
 

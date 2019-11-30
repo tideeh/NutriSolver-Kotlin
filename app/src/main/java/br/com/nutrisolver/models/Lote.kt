@@ -2,33 +2,37 @@ package br.com.nutrisolver.models
 
 import android.os.Parcel
 import android.os.Parcelable
+import br.com.nutrisolver.utils.DEFAULT_STRING_VALUE
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
 import java.util.*
 
 class Lote() : Parcelable {
     var id: String = UUID.randomUUID().toString()
-    var data_criacao: String =
+    var dataCriacao: String =
         SimpleDateFormat("dd/MM/yyyy HH.mm.ss").format(Timestamp(System.currentTimeMillis()))
 
-    var dono_uid: String = "-1"
-    var fazenda_id: String = "-1"
-    var nome: String = ""
+    var donoUid: String = DEFAULT_STRING_VALUE
+    var fazendaId: String = DEFAULT_STRING_VALUE
+    var nome: String = DEFAULT_STRING_VALUE
+    var ativo: Boolean = true
 
     constructor(parcel: Parcel) : this() {
-        id = parcel.readString() ?: "-1"
-        data_criacao = parcel.readString() ?: "-1"
-        dono_uid = parcel.readString() ?: "-1"
-        fazenda_id = parcel.readString() ?: "-1"
-        nome = parcel.readString() ?: ""
+        id = parcel.readString() ?: DEFAULT_STRING_VALUE
+        dataCriacao = parcel.readString() ?: DEFAULT_STRING_VALUE
+        donoUid = parcel.readString() ?: DEFAULT_STRING_VALUE
+        fazendaId = parcel.readString() ?: DEFAULT_STRING_VALUE
+        nome = parcel.readString() ?: DEFAULT_STRING_VALUE
+        ativo = parcel.readByte() != 0.toByte()
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(id)
-        parcel.writeString(data_criacao)
-        parcel.writeString(dono_uid)
-        parcel.writeString(fazenda_id)
+        parcel.writeString(dataCriacao)
+        parcel.writeString(donoUid)
+        parcel.writeString(fazendaId)
         parcel.writeString(nome)
+        parcel.writeByte(if (ativo) 1 else 0)
     }
 
     override fun describeContents(): Int {

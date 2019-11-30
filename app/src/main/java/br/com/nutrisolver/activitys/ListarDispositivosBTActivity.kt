@@ -20,21 +20,23 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import br.com.nutrisolver.R
-import br.com.nutrisolver.utils.ToastUtil
+import br.com.nutrisolver.utils.ACTIVITY_REQUEST_LIGAR_BT
+import br.com.nutrisolver.utils.INTENT_KEY_DEVICE_MAC_ADDRESS
+import br.com.nutrisolver.utils.PERMISSION_REQUEST_ACCESS_FINE_LOCATION
 import br.com.nutrisolver.utils.ToastUtil.show
 import br.com.nutrisolver.utils.UserUtil.isLogged
 
 class ListarDispositivosBTActivity : AppCompatActivity() {
-    private val REQUEST_ENABLE_BT = 1
-    var bluetoothAdapter: BluetoothAdapter? = null
-    private lateinit var listView_bt_devices: ListView
-    private lateinit var listView_new_devices: ListView
+    private var bluetoothAdapter: BluetoothAdapter? = null
+    private lateinit var listviewBtDevices: ListView
+    private lateinit var listviewNewBtDevices: ListView
     private lateinit var pairedDevicesArrayAdapter: ArrayAdapter<String>
-    private lateinit var mac_address_paired_list: ArrayList<String>
-    private lateinit var mac_address_new_list: ArrayList<String>
-    private lateinit var NewDevicesArrayAdapter: ArrayAdapter<String>
+    private lateinit var macAddressPairedList: ArrayList<String>
+    private lateinit var macAddressNewList: ArrayList<String>
+    private lateinit var newDevicesArrayAdapter: ArrayAdapter<String>
     private lateinit var progressBar: ProgressBar
     private lateinit var scanButton: Button
+
     private val mReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(
             context: Context,
@@ -50,8 +52,8 @@ class ListarDispositivosBTActivity : AppCompatActivity() {
                 )
                 if (device != null) {
                     if (device.bondState != BluetoothDevice.BOND_BONDED) {
-                        NewDevicesArrayAdapter.add(device.name)
-                        mac_address_new_list.add(device.address)
+                        newDevicesArrayAdapter.add(device.name)
+                        macAddressNewList.add(device.address)
                         Log.i("MY_BLUETOOTH", "receiver encontrou" + device.name)
                     }
                 }
@@ -60,11 +62,11 @@ class ListarDispositivosBTActivity : AppCompatActivity() {
                 Log.i("MY_BLUETOOTH", "receiver finalizou")
                 progressBar.visibility = View.GONE
                 scanButton.visibility = View.VISIBLE
-                title = "Fim da procura"
-                if (NewDevicesArrayAdapter.count == 0) { //String noDevices = "Nenhum dispositivo encontrado"
+                //title = "Fim da procura"
+                //if (newDevicesArrayAdapter.count == 0) { //String noDevices = "Nenhum dispositivo encontrado"
                     //ToastUtil.show(context, "Nenhum dispositivo encontrado", Toast.LENGTH_SHORT)
 //NewDevicesArrayAdapter.add(noDevices);
-                }
+                //}
             }
         }
     }
@@ -73,12 +75,12 @@ class ListarDispositivosBTActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_lista_dispositivos_bt)
 
-        NewDevicesArrayAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1)
+        newDevicesArrayAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1)
 
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
         progressBar = findViewById(R.id.progress_bar)
 
-        configura_listView()
+        configuraListview()
         // Register for broadcasts when a device is discovered
         val filter = IntentFilter(BluetoothDevice.ACTION_FOUND)
         registerReceiver(mReceiver, filter)
@@ -87,17 +89,17 @@ class ListarDispositivosBTActivity : AppCompatActivity() {
         val filter2 = IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED)
         registerReceiver(mReceiver, filter2)
 
-        configura_toolbar()
+        configuraToolbar()
         // Initialize the button to perform device discovery
         scanButton = findViewById(R.id.button_scan)
         scanButton.setOnClickListener { v ->
-            check_permission_first()
+            checkPermissionFirst()
             //doDiscovery()
             //v.visibility = View.GONE
         }
     }
 
-    private fun check_permission_first() {
+    private fun checkPermissionFirst() {
         if (ContextCompat.checkSelfPermission(
                 this,
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -107,7 +109,7 @@ class ListarDispositivosBTActivity : AppCompatActivity() {
             ActivityCompat.requestPermissions(
                 this,
                 arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                1003
+                PERMISSION_REQUEST_ACCESS_FINE_LOCATION
             )
 
         } else {
@@ -124,16 +126,16 @@ class ListarDispositivosBTActivity : AppCompatActivity() {
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
-        if (requestCode == 1003) {
+        if (requestCode == PERMISSION_REQUEST_ACCESS_FINE_LOCATION) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                ToastUtil.show(this, "Permission granted.", Toast.LENGTH_SHORT)
+                //show(this, "Permission granted.", Toast.LENGTH_SHORT)
                 scanButton.visibility = View.GONE
                 doDiscovery()
             } else {
-                ToastUtil.show(
+                show(
                     this,
-                    "Permissão necessária para utilizar esta funcionalidade",
+                    getString(R.string.permissao_necessaria_utilizar_funcionalidade),
                     Toast.LENGTH_SHORT
                 )
                 scanButton.visibility = View.VISIBLE
@@ -151,7 +153,7 @@ class ListarDispositivosBTActivity : AppCompatActivity() {
             if ((bluetoothAdapter as BluetoothAdapter).isDiscovering)
                 (bluetoothAdapter as BluetoothAdapter).cancelDiscovery()
             // Request discover from BluetoothAdapter
-            NewDevicesArrayAdapter.clear()
+            newDevicesArrayAdapter.clear()
             progressBar.visibility = View.VISIBLE
             (bluetoothAdapter as BluetoothAdapter).startDiscovery()
         }
@@ -165,16 +167,16 @@ class ListarDispositivosBTActivity : AppCompatActivity() {
             finish()
         }
 
-        check_bt_state()
+        checkBtState()
         pairedDevicesArrayAdapter.clear()
-        mac_address_paired_list = ArrayList()
+        macAddressPairedList = ArrayList()
         val pairedDevices =
             bluetoothAdapter?.bondedDevices
         if (pairedDevices != null) {
             if (pairedDevices.size > 0) { // There are paired devices. Get the name and address of each paired device.
                 for (device in pairedDevices) {
                     pairedDevicesArrayAdapter.add(device.name)
-                    mac_address_paired_list.add(device.address)
+                    macAddressPairedList.add(device.address)
                     //String deviceName = device.getName();
 //String deviceHardwareAddress = device.getAddress(); // MAC address
                 }
@@ -182,14 +184,14 @@ class ListarDispositivosBTActivity : AppCompatActivity() {
         }
     }
 
-    private fun check_bt_state() {
+    private fun checkBtState() {
         if (bluetoothAdapter == null) {
-            show(this, "Device does not support bluetooth", Toast.LENGTH_LONG)
+            show(this, getString(R.string.dispositivo_nao_suporta_bluetooth), Toast.LENGTH_LONG)
             finish()
         } else {
             if (!((bluetoothAdapter as BluetoothAdapter).isEnabled)) {
                 val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
-                startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT)
+                startActivityForResult(enableBtIntent, ACTIVITY_REQUEST_LIGAR_BT)
             }
         }
     }
@@ -200,48 +202,49 @@ class ListarDispositivosBTActivity : AppCompatActivity() {
         data: Intent?
     ) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_ENABLE_BT) {
+        if (requestCode == ACTIVITY_REQUEST_LIGAR_BT) {
             if (resultCode != Activity.RESULT_OK) { // bluetooth nao foi ativado
-                show(this, "Falha ao ativar o bluetooth", Toast.LENGTH_LONG)
+                show(this, getString(R.string.falha_ao_ativar_o_bluetooth), Toast.LENGTH_LONG)
                 finish()
             }
         }
     }
 
-    private fun configura_listView() {
-        mac_address_new_list = ArrayList()
+    private fun configuraListview() {
+        macAddressNewList = ArrayList()
 
-        listView_new_devices =
+        listviewNewBtDevices =
             findViewById<View>(R.id.listView_bt_new_devices) as ListView
-        listView_new_devices.adapter = NewDevicesArrayAdapter
-        listView_new_devices.onItemClickListener =
+        listviewNewBtDevices.adapter = newDevicesArrayAdapter
+        listviewNewBtDevices.onItemClickListener =
             OnItemClickListener { parent, view, position, id ->
                 bluetoothAdapter?.cancelDiscovery()
-                val mac_address_selected = mac_address_new_list[position]
+                val macAddressSelected = macAddressNewList[position]
                 val it = Intent()
-                it.putExtra("device_mac_address", mac_address_selected)
+                it.putExtra(INTENT_KEY_DEVICE_MAC_ADDRESS, macAddressSelected)
                 setResult(Activity.RESULT_OK, it)
                 finish()
             }
-        listView_bt_devices =
+
+        listviewBtDevices =
             findViewById<View>(R.id.listView_bt_devices_paireds) as ListView
         pairedDevicesArrayAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1)
-        listView_bt_devices.adapter = pairedDevicesArrayAdapter
-        listView_bt_devices.onItemClickListener =
+        listviewBtDevices.adapter = pairedDevicesArrayAdapter
+        listviewBtDevices.onItemClickListener =
             OnItemClickListener { adapterView, view, i, l ->
                 bluetoothAdapter?.cancelDiscovery()
-                val mac_address_selected = mac_address_paired_list[i]
+                val macAddressSelected = macAddressPairedList[i]
                 val it = Intent()
-                it.putExtra("device_mac_address", mac_address_selected)
+                it.putExtra(INTENT_KEY_DEVICE_MAC_ADDRESS, macAddressSelected)
                 setResult(Activity.RESULT_OK, it)
                 finish()
             }
     }
 
-    private fun configura_toolbar() { // adiciona a barra de tarefas na tela
-        val my_toolbar =
+    private fun configuraToolbar() { // adiciona a barra de tarefas na tela
+        val myToolbar =
             findViewById<Toolbar>(R.id.my_toolbar_main)
-        setSupportActionBar(my_toolbar)
+        setSupportActionBar(myToolbar)
         // adiciona a seta de voltar na barra de tarefas
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)

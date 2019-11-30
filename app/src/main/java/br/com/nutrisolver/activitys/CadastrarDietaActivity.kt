@@ -1,5 +1,6 @@
 package br.com.nutrisolver.activitys
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -30,12 +31,12 @@ class CadastrarDietaActivity : AppCompatActivity() {
     private lateinit var progressBar: ProgressBar
     private lateinit var listViewEditarIngredientes: ListView
     private lateinit var editTextNomeDieta: EditText
-    private var fazendaCorrenteId: String = "-1"
-    private var fazendaCorrenteNome: String = "-1"
+    private var fazendaCorrenteId: String = DEFAULT_STRING_VALUE
+    private var fazendaCorrenteNome: String = DEFAULT_STRING_VALUE
     private var listLotesNomes: ArrayList<String> = ArrayList()
     private var listLotesIds: ArrayList<String> = ArrayList()
     private lateinit var spinner: Spinner
-    private var loteSelecionadoId: String = "-1"
+    private var loteSelecionadoId: String = DEFAULT_STRING_VALUE
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -86,7 +87,7 @@ class CadastrarDietaActivity : AppCompatActivity() {
             progressBar.visibility = View.GONE
         } else { // recebe os possiveis ingredientes
             listIngredientesNomes = ArrayList()
-            DataBaseUtil.getDocumentsWhereEqualTo(DB_COLLECTION_INGREDIENTES, "ativo", true)
+            DataBaseUtil.getDocumentsWhereEqualTo(DB_COLLECTION_INGREDIENTES, Ingrediente::ativo.name, true)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         val documents = task.result
@@ -138,13 +139,13 @@ class CadastrarDietaActivity : AppCompatActivity() {
         progressBar.visibility = View.VISIBLE
         dieta = Dieta()
         dieta.nome = editTextNomeDieta.text.toString()
-        dieta.fazenda_id = fazendaCorrenteId
-        dieta.dono_uid = getCurrentUser()?.uid ?: DEFAULT_STRING_VALUE
+        dieta.fazendaId = fazendaCorrenteId
+        dieta.donoUid = getCurrentUser()?.uid ?: DEFAULT_STRING_VALUE
 
         val spinnerPos = spinner.selectedItemPosition
 
         if (spinnerPos != 0) {
-            dieta.lote_id = listLotesIds[spinnerPos]
+            dieta.loteId = listLotesIds[spinnerPos]
         }
 
         val len = listViewEditarIngredientes.count
@@ -152,7 +153,7 @@ class CadastrarDietaActivity : AppCompatActivity() {
         for (i in 0 until len) {
             if (checked[i]) {
                 val item = listIngredientesNomes[i]
-                dieta.ingredientes_nomes?.add(item)
+                dieta.ingredientesNomes?.add(item)
             }
         }
         // desativa a dieta anterior
@@ -163,7 +164,7 @@ class CadastrarDietaActivity : AppCompatActivity() {
 // salva a nova dieta
         DataBaseUtil.insertDocument(DB_COLLECTION_DIETAS, dieta.id, dieta)
         // envia a dieta para o fragment
-        PrincipalActivity.sendData(SEND_DATA_FRAGMENT_DIETAS, SEND_DATA_COMMAND_ADD_DIETA, dieta)
+        PrincipalActivity.sendData(SEND_DATA_FRAGMENT_DIETAS, SEND_DATA_COMMAND_ADICIONA_DIETA, dieta)
         Handler().postDelayed({ finalizaCadastro() }, 800)
     }
 
@@ -172,7 +173,7 @@ class CadastrarDietaActivity : AppCompatActivity() {
         progressBar.visibility = View.GONE
         val it = Intent()
         it.putExtra(INTENT_KEY_DIETA_CADASTRADA, dieta)
-        setResult(1, it)
+        setResult(Activity.RESULT_OK, it)
         finish()
     }
 
@@ -210,7 +211,7 @@ class CadastrarDietaActivity : AppCompatActivity() {
     }
 
     private fun configuraSpinner() {
-        DataBaseUtil.getDocumentsWhereEqualTo(DB_COLLECTION_LOTES, "fazenda_id", fazendaCorrenteId)
+        DataBaseUtil.getDocumentsWhereEqualTo(DB_COLLECTION_LOTES, Lote::fazendaId.name, fazendaCorrenteId)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     listLotesNomes = ArrayList()

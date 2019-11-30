@@ -1,5 +1,6 @@
 package br.com.nutrisolver.activitys
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -16,42 +17,40 @@ import androidx.appcompat.widget.Toolbar
 import br.com.nutrisolver.R
 import br.com.nutrisolver.models.Fazenda
 import br.com.nutrisolver.adapters.AdapterFazenda
-import br.com.nutrisolver.utils.DataBaseUtil
-import br.com.nutrisolver.utils.SP_NOME
-import br.com.nutrisolver.utils.UserUtil
+import br.com.nutrisolver.utils.*
 
 class SelecionarFazendaActivity : AppCompatActivity() {
-    private lateinit var sharedpreferences: SharedPreferences
+    private lateinit var sharedPreferences: SharedPreferences
 
-    private lateinit var listView_Fazendas: ListView
+    private lateinit var listviewFazendas: ListView
     private lateinit var adapterFazenda: AdapterFazenda
     private lateinit var progressBar: ProgressBar
-    private lateinit var my_toolbar: Toolbar
+    private lateinit var myToolbar: Toolbar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_selecionar_fazenda)
 
-        sharedpreferences = getSharedPreferences(SP_NOME, Context.MODE_PRIVATE)
+        sharedPreferences = getSharedPreferences(SP_NOME, Context.MODE_PRIVATE)
 
         progressBar = findViewById(R.id.progress_bar)
 
-        configura_listView()
-        atualiza_lista_de_fazendas()
-        configura_toolbar()
+        configuraListview()
+        atualizaListaDeFazendas()
+        configuraToolbar()
 
     }
 
-    private fun configura_listView() {
-        listView_Fazendas = findViewById(R.id.lista_fazendas)
+    private fun configuraListview() {
+        listviewFazendas = findViewById(R.id.lista_fazendas)
         adapterFazenda = AdapterFazenda(this)
-        listView_Fazendas.adapter = adapterFazenda
-        listView_Fazendas.onItemClickListener =
+        listviewFazendas.adapter = adapterFazenda
+        listviewFazendas.onItemClickListener =
             AdapterView.OnItemClickListener { parent, view, position, id ->
-                val editor = sharedpreferences.edit()
-                editor.putString("fazenda_corrente_id", adapterFazenda.getItemIdString(position))
+                val editor = sharedPreferences.edit()
+                editor.putString(SP_KEY_FAZENDA_CORRENTE_ID, adapterFazenda.getItemIdString(position))
                 editor.putString(
-                    "fazenda_corrente_nome",
+                    SP_KEY_FAZENDA_CORRENTE_NOME,
                     (adapterFazenda.getItem(position) as Fazenda).nome
                 )
                 editor.apply()
@@ -62,13 +61,13 @@ class SelecionarFazendaActivity : AppCompatActivity() {
             }
     }
 
-    private fun atualiza_lista_de_fazendas() {
+    private fun atualizaListaDeFazendas() {
         progressBar.visibility = View.VISIBLE
 
         DataBaseUtil.getDocumentsWhereEqualTo(
-            "fazendas",
-            "dono_uid",
-            UserUtil.getCurrentUser()?.uid ?: "-1"
+            DB_COLLECTION_FAZENDAS,
+            arrayOf(Fazenda::donoUid.name, Fazenda::ativo.name),
+            arrayOf(UserUtil.getCurrentUser()?.uid ?: DEFAULT_STRING_VALUE, true)
         )
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
@@ -91,20 +90,20 @@ class SelecionarFazendaActivity : AppCompatActivity() {
             }
     }
 
-    private fun configura_toolbar() {
+    private fun configuraToolbar() {
         // adiciona a barra de tarefas na tela
-        my_toolbar = findViewById(R.id.my_toolbar_main)
-        setSupportActionBar(my_toolbar)
+        myToolbar = findViewById(R.id.my_toolbar_main)
+        setSupportActionBar(myToolbar)
     }
 
-    fun cadastrar_fazenda(view: View) {
-        startActivityForResult(Intent(this, CadastrarFazendaActivity::class.java), 1001)
+    fun cadastrarFazenda(view: View) {
+        startActivityForResult(Intent(this, CadastrarFazendaActivity::class.java), ACTIVITY_REQUEST_CADASTRAR_FAZENDA)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == 1001 && resultCode == 1) {
+        if (requestCode == ACTIVITY_REQUEST_CADASTRAR_FAZENDA && resultCode == Activity.RESULT_OK) {
             startActivity(Intent(this, PrincipalActivity::class.java))
             finish()
         }
@@ -140,9 +139,9 @@ class SelecionarFazendaActivity : AppCompatActivity() {
     private fun logout() {
         UserUtil.logOut()
 
-        val editor = sharedpreferences.edit()
-        editor.remove("fazenda_corrente_id")
-        editor.remove("fazenda_corrente_nome")
+        val editor = sharedPreferences.edit()
+        editor.remove(SP_KEY_FAZENDA_CORRENTE_ID)
+        editor.remove(SP_KEY_FAZENDA_CORRENTE_NOME)
         editor.apply()
 
         startActivity(Intent(this, LoginActivity::class.java))

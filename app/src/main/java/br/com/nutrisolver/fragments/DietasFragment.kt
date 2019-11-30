@@ -18,22 +18,21 @@ import br.com.nutrisolver.activitys.CadastrarDietaActivity
 import br.com.nutrisolver.activitys.PrincipalActivity
 import br.com.nutrisolver.models.Dieta
 import br.com.nutrisolver.adapters.AdapterDieta
-import br.com.nutrisolver.utils.DataBaseUtil
-import br.com.nutrisolver.utils.SP_NOME
+import br.com.nutrisolver.utils.*
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.util.*
 
 class DietasFragment : Fragment(),
     PrincipalActivity.DataFromActivityToFragment {
-    lateinit var my_view: View
-    private lateinit var listView_dietas: ListView
+    private lateinit var myView: View
+    private lateinit var listviewDietas: ListView
     private lateinit var adapterDieta: AdapterDieta
-    private var lista_dietas: ArrayList<Dieta> = ArrayList()
+    private var listDietas: ArrayList<Dieta> = ArrayList()
 
-    private var sharedpreferences: SharedPreferences? = null
-    private var fazenda_corrente_id: String = "-1"
+    private var sharedPreferences: SharedPreferences? = null
+    private var fazendaCorrenteId: String = DEFAULT_STRING_VALUE
     private lateinit var progressBar: ProgressBar
-    private var from_onSaveInstanceState = false
+    private var fromOnSaveInstanceState = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,22 +46,23 @@ class DietasFragment : Fragment(),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        this.my_view = view
+        this.myView = view
 
-        from_onSaveInstanceState = false
-        lista_dietas = ArrayList()
+        fromOnSaveInstanceState = false
+        listDietas = ArrayList()
         if (savedInstanceState != null) {
-            lista_dietas =
-                savedInstanceState.getParcelableArrayList<Dieta>("lista_dietas") ?: ArrayList()
-            from_onSaveInstanceState = savedInstanceState.getBoolean("from_onSaveInstanceState")
+            listDietas =
+                savedInstanceState.getParcelableArrayList<Dieta>(BUNDLE_KEY_LISTA_DIETAS) ?: ArrayList()
+            fromOnSaveInstanceState = savedInstanceState.getBoolean(
+                BUNDLE_KEY_FROM_ON_SAVE_INSTANCE_STATE_DIETAS)
         }
 
-        sharedpreferences = activity?.getSharedPreferences(SP_NOME, Context.MODE_PRIVATE)
-        fazenda_corrente_id = sharedpreferences?.getString("fazenda_corrente_id", "-1") ?: "-1"
+        sharedPreferences = activity?.getSharedPreferences(SP_NOME, Context.MODE_PRIVATE)
+        fazendaCorrenteId = sharedPreferences?.getString(SP_KEY_FAZENDA_CORRENTE_ID, DEFAULT_STRING_VALUE) ?: DEFAULT_STRING_VALUE
         progressBar = view.findViewById(R.id.progress_bar)
 
-        configura_listView()
-        atualiza_lista_de_dietas()
+        configuraListview()
+        atualizaListaDeDietas()
 
         view.findViewById<FloatingActionButton>(R.id.fab_cadastrar_dieta).setOnClickListener {
             val ite = Intent(activity, CadastrarDietaActivity::class.java)
@@ -73,26 +73,26 @@ class DietasFragment : Fragment(),
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
 
-        outState.putParcelableArrayList("lista_dietas", adapterDieta.list_items)
-        outState.putBoolean("from_onSaveInstanceState", true)
+        outState.putParcelableArrayList(BUNDLE_KEY_LISTA_DIETAS, adapterDieta.listItems)
+        outState.putBoolean(BUNDLE_KEY_FROM_ON_SAVE_INSTANCE_STATE_DIETAS, true)
     }
 
-    private fun atualiza_lista_de_dietas() {
+    private fun atualizaListaDeDietas() {
         progressBar.visibility = View.VISIBLE
 
         adapterDieta.clear()
-        if (from_onSaveInstanceState) {
-            from_onSaveInstanceState = false
+        if (fromOnSaveInstanceState) {
+            fromOnSaveInstanceState = false
             Log.i("MY_SAVED", "dietas vieram do saved!")
-            for (dieta in lista_dietas) {
+            for (dieta in listDietas) {
                 adapterDieta.addItem(dieta)
             }
             progressBar.visibility = View.GONE
         } else {
             DataBaseUtil.getDocumentsWhereEqualTo(
-                "dietas",
-                arrayOf("fazenda_id", "ativo"),
-                arrayOf(fazenda_corrente_id, true)
+                DB_COLLECTION_DIETAS,
+                arrayOf(Dieta::fazendaId.name, Dieta::ativo.name),
+                arrayOf(fazendaCorrenteId, true)
             )
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
@@ -125,11 +125,11 @@ class DietasFragment : Fragment(),
 
  */
 
-    private fun configura_listView() {
-        listView_dietas = my_view.findViewById(R.id.lista_dietas) as ListView
+    private fun configuraListview() {
+        listviewDietas = myView.findViewById(R.id.lista_dietas) as ListView
         adapterDieta = AdapterDieta(activity)
-        listView_dietas.adapter = adapterDieta
-        listView_dietas.onItemClickListener =
+        listviewDietas.adapter = adapterDieta
+        listviewDietas.onItemClickListener =
             AdapterView.OnItemClickListener { parent, view, position, id ->
                 //Intent it = new Intent(view.getContext(), VisualizaDieta.class);
                 //it.putExtra("lote_id", adapterLote.getItemIdString(position));
@@ -140,13 +140,13 @@ class DietasFragment : Fragment(),
 
     override fun sendData(data: String, `object`: Any?) {
         when (data) {
-            "atualiza_dietas" -> {
-                fazenda_corrente_id =
-                    sharedpreferences?.getString("fazenda_corrente_id", "-1") ?: "-1"
-                atualiza_lista_de_dietas()
+            SEND_DATA_COMMAND_ATUALIZA_DIETAS -> {
+                fazendaCorrenteId =
+                    sharedPreferences?.getString(SP_KEY_FAZENDA_CORRENTE_ID, DEFAULT_STRING_VALUE) ?: DEFAULT_STRING_VALUE
+                atualizaListaDeDietas()
             }
 
-            "adiciona_dieta" -> {
+            SEND_DATA_COMMAND_ADICIONA_DIETA -> {
                 adapterDieta.addItem(`object` as Dieta)
             }
 

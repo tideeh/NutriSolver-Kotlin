@@ -1,5 +1,6 @@
 package br.com.nutrisolver.activitys
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -79,13 +80,13 @@ class CadastrarLoteActivity : AppCompatActivity() {
 
         lote = Lote()
         lote.nome = nomeLote
-        lote.fazenda_id = fazendaCorrenteId
-        lote.dono_uid = getCurrentUser()?.uid ?: DEFAULT_STRING_VALUE
+        lote.fazendaId = fazendaCorrenteId
+        lote.donoUid = getCurrentUser()?.uid ?: DEFAULT_STRING_VALUE
 
         DataBaseUtil.insertDocument(DB_COLLECTION_LOTES, lote.id, lote)
 
         // envia o lote para o fragment
-        PrincipalActivity.sendData(SEND_DATA_FRAGMENT_LOTES, SEND_DATA_COMMAND_ADD_LOTE, lote)
+        PrincipalActivity.sendData(SEND_DATA_FRAGMENT_LOTES, SEND_DATA_COMMAND_ADICIONA_LOTE, lote)
         val handler = Handler()
         handler.postDelayed({ finalizaCadastro() }, 800)
     }
@@ -95,7 +96,7 @@ class CadastrarLoteActivity : AppCompatActivity() {
         progressBar.visibility = View.GONE
         val it = Intent()
         it.putExtra(INTENT_KEY_LOTE_CADASTRADO, lote)
-        setResult(1, it)
+        setResult(Activity.RESULT_OK, it)
         finish()
     }
 

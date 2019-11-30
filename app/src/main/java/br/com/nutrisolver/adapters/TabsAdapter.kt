@@ -5,7 +5,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import java.util.*
 
-class TabsAdapter(fm: FragmentManager, internal var numberOfTabs: Int) :
+class TabsAdapter(fm: FragmentManager, private var numberOfTabs: Int) :
     FragmentPagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
     private val listFragments = ArrayList<Fragment>()
     private val listFragmentsTitle = ArrayList<String>()

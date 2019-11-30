@@ -10,9 +10,9 @@ import br.com.nutrisolver.R
 
 class AdapterIngredienteNome(
     context: Context,
-    possiveis_ingredientes: List<String>
+    listPossiveisIngredientes: List<String>
 ) :
-    ArrayAdapter<String?>(context, 0, possiveis_ingredientes) {
+    ArrayAdapter<String?>(context, 0, listPossiveisIngredientes) {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
 
@@ -25,9 +25,9 @@ class AdapterIngredienteNome(
                 .inflate(R.layout.lista_possiveis_ingredientes_item, parent, false)
         }
 
-        val ing_nome = cv?.findViewById<View>(R.id.lista_ingrediente_nome) as TextView
+        val ingNome = cv?.findViewById<View>(R.id.lista_ingrediente_nome) as TextView
 
-        ing_nome.text = ing
+        ingNome.text = ing
 
 
         return cv
