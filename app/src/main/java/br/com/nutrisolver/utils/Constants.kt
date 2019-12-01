@@ -18,10 +18,12 @@ const val SP_KEY_FAZENDA_CORRENTE_ID = "fazenda_corrente_id"
 const val SP_KEY_FAZENDA_CORRENTE_NOME = "fazenda_corrente_nome"
 const val SP_KEY_INGREDIENTES_NOMES_LAST_UPDATE = "ingredientes_nomes_last_update"
 const val SP_KEY_DEVICE_MAC_ADDRESS = "device_mac_address"
+const val SP_KEY_VERSION_CODE = "version_code"
 
 // defaults values (quando nao encontra o valor pedido)
 const val DEFAULT_STRING_VALUE = "-1"
 const val DEFAULT_LONG_VALUE : Long = 0
+const val DEFAULT_INT_VALUE : Int = 0
 
 // intent put/get extras
 const val INTENT_KEY_LOTE_SELECIONADO_ID = "lote_selecionado_id"

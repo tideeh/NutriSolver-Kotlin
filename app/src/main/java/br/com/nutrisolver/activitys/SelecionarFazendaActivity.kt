@@ -127,6 +127,8 @@ class SelecionarFazendaActivity : AppCompatActivity() {
 
             R.id.miDeslogar -> {
                 logout()
+                startActivity(Intent(this, LoginActivity::class.java))
+                finish()
                 return true
             }
 
@@ -143,9 +145,6 @@ class SelecionarFazendaActivity : AppCompatActivity() {
         editor.remove(SP_KEY_FAZENDA_CORRENTE_ID)
         editor.remove(SP_KEY_FAZENDA_CORRENTE_NOME)
         editor.apply()
-
-        startActivity(Intent(this, LoginActivity::class.java))
-        finish()
     }
 
     override fun onStart() {

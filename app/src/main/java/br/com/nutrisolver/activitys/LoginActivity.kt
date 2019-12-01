@@ -152,6 +152,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         if(requestCode == ACTIVITY_REQUEST_REGISTRAR){
             if(resultCode == Activity.RESULT_OK){
                 startActivity(Intent(this, SelecionarFazendaActivity::class.java))
+                finish()
             }
         }
     }

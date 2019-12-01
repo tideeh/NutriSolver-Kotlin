@@ -286,6 +286,8 @@ class PrincipalActivity : AppCompatActivity() {
 
             R.id.miDeslogar -> {
                 logout()
+                startActivity(Intent(this, LoginActivity::class.java))
+                finish()
                 return true
             }
 
@@ -302,9 +304,6 @@ class PrincipalActivity : AppCompatActivity() {
         editor.remove(SP_KEY_FAZENDA_CORRENTE_ID)
         editor.remove(SP_KEY_FAZENDA_CORRENTE_NOME)
         editor.apply()
-
-        startActivity(Intent(this, LoginActivity::class.java))
-        finish()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

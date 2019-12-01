@@ -35,7 +35,37 @@ class SplashScreenActivity : AppCompatActivity() {
 
         findViewById<TextView>(R.id.splash_version_name).text = versionName
 
+        // verifica é o primeiro run, se for e estiver logado, tem algo errado (nao deveria estar logado)
+        checkFirstRun()
+
         Handler().postDelayed( {verificaLogin()}, 500)
+    }
+
+    private fun checkFirstRun() {
+        val currentVersionCode : Int = BuildConfig.VERSION_CODE
+        val savedVersionCode : Int = sharedPreferences.getInt(SP_KEY_VERSION_CODE, DEFAULT_INT_VALUE)
+
+        val editor = sharedPreferences.edit()
+        editor.putInt(SP_KEY_VERSION_CODE, currentVersionCode)
+        editor.apply()
+
+        when {
+            currentVersionCode == savedVersionCode -> {
+                // this is just a normal run
+                return
+            }
+            savedVersionCode == DEFAULT_INT_VALUE -> {
+                // this is a new install (or the user cleared the preferences)
+                // primeira execução e ja esta logado???
+
+                logout()
+                return
+            }
+            currentVersionCode > savedVersionCode -> {
+                // this is an upgrade
+                return
+            }
+        }
     }
 
     private fun verificaLogin(){
@@ -46,6 +76,7 @@ class SplashScreenActivity : AppCompatActivity() {
             finish()
         }
         else{
+
             fazendaCorrenteId = sharedPreferences.getString(SP_KEY_FAZENDA_CORRENTE_ID, DEFAULT_STRING_VALUE) ?: DEFAULT_STRING_VALUE
 
             DataBaseUtil.getDocument(DB_COLLECTION_FAZENDAS, fazendaCorrenteId)
@@ -68,9 +99,20 @@ class SplashScreenActivity : AppCompatActivity() {
                             }
                         }
                     }
+
                     startActivity(Intent(applicationContext, SelecionarFazendaActivity::class.java))
                     finish()
                 }
         }
     }
+
+    private fun logout() {
+        UserUtil.logOut()
+
+        val editor = sharedPreferences.edit()
+        editor.remove(SP_KEY_FAZENDA_CORRENTE_ID)
+        editor.remove(SP_KEY_FAZENDA_CORRENTE_NOME)
+        editor.apply()
+    }
+
 }
