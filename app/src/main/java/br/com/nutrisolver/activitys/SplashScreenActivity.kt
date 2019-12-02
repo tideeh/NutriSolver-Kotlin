@@ -45,10 +45,6 @@ class SplashScreenActivity : AppCompatActivity() {
         val currentVersionCode : Int = BuildConfig.VERSION_CODE
         val savedVersionCode : Int = sharedPreferences.getInt(SP_KEY_VERSION_CODE, DEFAULT_INT_VALUE)
 
-        val editor = sharedPreferences.edit()
-        editor.putInt(SP_KEY_VERSION_CODE, currentVersionCode)
-        editor.apply()
-
         when {
             currentVersionCode == savedVersionCode -> {
                 // this is just a normal run
@@ -58,11 +54,20 @@ class SplashScreenActivity : AppCompatActivity() {
                 // this is a new install (or the user cleared the preferences)
                 // primeira execução e ja esta logado???
 
+                val editor = sharedPreferences.edit()
+                editor.putInt(SP_KEY_VERSION_CODE, currentVersionCode)
+                editor.apply()
+
                 logout()
                 return
             }
             currentVersionCode > savedVersionCode -> {
                 // this is an upgrade
+
+                val editor = sharedPreferences.edit()
+                editor.putInt(SP_KEY_VERSION_CODE, currentVersionCode)
+                editor.apply()
+
                 return
             }
         }
