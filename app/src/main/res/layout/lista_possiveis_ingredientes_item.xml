@@ -33,7 +33,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:tint="@color/colorPrimaryLight"
+            android:tint="@color/colorPrimary"
             android:layout_gravity="center"
             android:id="@+id/listView_poss_ing_add"
             android:layout_width="wrap_content"
@@ -42,7 +42,7 @@
             android:visibility="visible" />
 
         <ImageView
-            android:tint="@color/colorPrimaryLight"
+            android:tint="@color/colorPrimary"
             android:layout_gravity="center"
             android:id="@+id/listView_poss_ing_remove"
             android:layout_width="wrap_content"

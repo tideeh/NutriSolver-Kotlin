@@ -12,6 +12,7 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
+import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
@@ -25,9 +26,10 @@ import br.com.nutrisolver.fragments.DietasFragment
 import br.com.nutrisolver.fragments.LotesFragment
 import br.com.nutrisolver.fragments.TestesFragment
 import br.com.nutrisolver.utils.*
+import com.google.android.material.navigation.NavigationView
 import com.google.android.material.tabs.TabLayout
 
-class PrincipalActivity : AppCompatActivity() {
+class PrincipalActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private lateinit var lotesFragment: LotesFragment
     private lateinit var dietasFragment: DietasFragment
     private lateinit var testesFragment: TestesFragment
@@ -48,6 +50,8 @@ class PrincipalActivity : AppCompatActivity() {
 
     private lateinit var mDrawerLayout: DrawerLayout
     private lateinit var mDrawerToggle: ActionBarDrawerToggle
+    private lateinit var navigationView: NavigationView
+    private lateinit var navUserName : TextView
 
     private var listFazendasNomes: ArrayList<String> = ArrayList()
     private var listFazendasIds: ArrayList<String> = ArrayList()
@@ -64,7 +68,12 @@ class PrincipalActivity : AppCompatActivity() {
 
         fazendaCorrenteId = sharedPreferences.getString(SP_KEY_FAZENDA_CORRENTE_ID, DEFAULT_STRING_VALUE) ?: DEFAULT_STRING_VALUE
         fazendaCorrenteNome = sharedPreferences.getString(SP_KEY_FAZENDA_CORRENTE_NOME, DEFAULT_STRING_VALUE) ?: DEFAULT_STRING_VALUE
-        spinner = findViewById(R.id.spn_fazendas)
+
+        navigationView = findViewById(R.id.nav_view)
+        navigationView.setNavigationItemSelectedListener(this)
+        val navHeader = navigationView.getHeaderView(0)
+        spinner = navHeader.findViewById(R.id.spn_fazendas)
+        navUserName = navHeader.findViewById(R.id.nav_header_username)
 
         configuraToolbarComNavDrawer()
 
@@ -113,6 +122,8 @@ class PrincipalActivity : AppCompatActivity() {
             startActivity(Intent(this, LoginActivity::class.java))
             finish()
         }
+
+        navUserName.text = UserUtil.getCurrentUser()?.displayName ?: ""
 
         // fecha o navigation drawer
         mDrawerLayout = findViewById(R.id.drawer_layout)
@@ -179,17 +190,18 @@ class PrincipalActivity : AppCompatActivity() {
     private fun configuraToolbarComNavDrawer() {
         val myToolbar = findViewById<Toolbar>(R.id.my_toolbar_main)
         setSupportActionBar(myToolbar)
-        supportActionBar?.setDisplayShowHomeEnabled(true)
+        //supportActionBar?.setDisplayShowHomeEnabled(true)
         mDrawerLayout = findViewById(R.id.drawer_layout)
-        mDrawerToggle = object :
-            ActionBarDrawerToggle(
+
+        mDrawerLayout
+        mDrawerToggle = ActionBarDrawerToggle(
                 this,
                 mDrawerLayout,
                 myToolbar,
                 R.string.drawer_open,
                 R.string.drawer_close
-            ) {
-        }
+            )
+
         mDrawerLayout.addDrawerListener(mDrawerToggle)
         mDrawerLayout.post { mDrawerToggle.syncState() }
 
@@ -330,10 +342,6 @@ class PrincipalActivity : AppCompatActivity() {
         fun sendData(data: String, `object`: Any?)
     }
 
-    fun sidebarButtonTestarAmostra(v: View) {
-        startActivity(Intent(this, ExecutarTeste1Activity::class.java))
-    }
-
     companion object {
         lateinit var dataFromActivityToLotesFragment: DataFromActivityToFragment
         lateinit var dataFromActivityToDietasFragment: DataFromActivityToFragment
@@ -357,6 +365,21 @@ class PrincipalActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    override fun onNavigationItemSelected(p0: MenuItem): Boolean {
+
+        when (p0.itemId){
+
+            R.id.nav_item_testar_amostra -> {
+                startActivity(Intent(this, ExecutarTeste1Activity::class.java))
+            }
+
+        }
+
+        mDrawerLayout.closeDrawers()
+
+        return true
     }
 
 }

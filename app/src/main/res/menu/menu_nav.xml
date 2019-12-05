@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <group
+        android:id="@+id/group1"
+        android:checkableBehavior="single">
+        <item
+            android:checkable="false"
+            android:id="@+id/nav_item_testar_amostra"
+            android:icon="@drawable/ic_action_pick"
+            android:title="Testar amostra" />
+    </group>
+
+    <group
+        android:id="@+id/group2"
+        android:checkableBehavior="single">
+        <item
+            android:checkable="false"
+            android:id="@+id/nav_item_relatorios"
+            android:icon="@drawable/relatorios"
+            android:title="Relatórios" />
+    </group>
+
+    <group
+        android:id="@+id/group3"
+        android:checkableBehavior="single">
+        <item
+            android:checkable="false"
+            android:id="@+id/nav_item_cadastros"
+            android:icon="@drawable/cadastro"
+            android:title="Cadastros" />
+    </group>
+
+    <group
+        android:id="@+id/group4"
+        android:checkableBehavior="single">
+        <item
+            android:checkable="false"
+            android:id="@+id/nav_item_suporte_tecnico"
+            android:icon="@drawable/suporte_tecnico2"
+            android:title="Suporte Técnico" />
+    </group>
+
+    <group
+        android:id="@+id/group5"
+        android:checkableBehavior="single">
+        <item
+            android:checkable="false"
+            android:id="@+id/nav_item_planos"
+            android:icon="@drawable/ic_action_planos"
+            android:title="Planos" />
+    </group>
+
+    <group
+        android:id="@+id/group6"
+        android:checkableBehavior="single">
+        <item
+            android:checkable="false"
+            android:id="@+id/nav_item_configuracoes"
+            android:icon="@drawable/configuration2"
+            android:title="Configurações" />
+    </group>
+
+    <group
+        android:id="@+id/group7"
+        android:checkableBehavior="single">
+        <item
+            android:checkable="false"
+            android:id="@+id/nav_item_faq"
+            android:icon="@drawable/ic_action_faq"
+            android:title="FAQ" />
+    </group>
+
+    <group
+        android:id="@+id/group8"
+        android:checkableBehavior="single">
+        <item
+            android:checkable="false"
+            android:id="@+id/nav_item_encerrar"
+            android:icon="@drawable/ic_action_exit"
+            android:title="Encerrar" />
+    </group>
+
+</menu>
